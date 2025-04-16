@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMS Career Day - Health & Biomedical Sciences</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        display: ['Libre Baskerville', 'serif'],
+                    },
+                    colors: {
+                        maroon: '#800020',
+                        'maroon-light': '#9A2A2A',
+                        'maroon-dark': '#5C0011',
+                        cream: '#F8F4E9',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #800020 0%, #5C0011 100%);
+        }
+        .program-item {
+            transition: all 0.3s ease;
+        }
+        .program-item:hover {
+            background-color: #F8F4E9;
+        }
+    </style>
+</head>
+<body class="bg-white font-sans text-gray-800 antialiased">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="gradient-bg text-white shadow-lg">
+            <div class="container mx-auto px-4 py-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-6 md:mb-0">
+                        <h1 class="text-3xl md:text-4xl font-display font-bold mb-2">AMS Career Day</h1>
+                        <p class="text-xl md:text-2xl font-light">Exploring Careers in Health and Biomedical Sciences</p>
+                    </div>
+                    <div class="bg-white text-maroon rounded-lg p-4 shadow-md text-center">
+                        <p class="text-sm font-semibold">Event Date</p>
+                        <p class="text-2xl font-bold">Tomorrow</p>
+                        <p class="text-sm">08:00 AM - 03:10 PM</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <!-- Introduction Section -->
+            <section class="mb-12">
+                <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                    <h2 class="text-2xl md:text-3xl font-display font-bold text-primary mb-4">About the Event</h2>
+                    <div class="prose max-w-none">
+                        <p class="text-lg mb-4">Join us for an inspiring day of exploration and networking at the AMS Career Day, focused on careers in Health and Biomedical Sciences. This event brings together students, researchers, and professionals to share insights, experiences, and opportunities in these dynamic fields.</p>
+                        <p class="mb-4">The program features keynote speeches, panel discussions, poster presentations, and networking sessions with leading institutions and organizations in the health sector.</p>
+                        <p class="font-semibold text-maroon">Don't miss this opportunity to learn from experts, connect with potential mentors, and explore exciting career paths in health and biomedical sciences.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Program Section -->
+            <section>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-primary text-white px-6 py-4">
+                        <h2 class="text-2xl font-display font-bold">Event Program</h2>
+                    </div>
+                    
+                    <!-- Responsive Table (works on all devices) -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Time</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Activity</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Speaker/Institution</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="program-item">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">08:00 AM – 08:30 AM</td>
+                                    <td class="px-4 py-4">Arrival and Registration</td>
+                                    <td class="px-4 py-4">Mr. Happy Gondwe</td>
+                                </tr>
+                                <tr class="program-item bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">08:30 AM – 08:40 AM</td>
+                                    <td class="px-4 py-4">Opening Remarks</td>
+                                    <td class="px-4 py-4">Mr. Yankho Thawani</td>
+                                </tr>
+                                <tr class="program-item">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">08:40 AM – 08:55 AM</td>
+                                    <td class="px-4 py-4">Welcome Address/Official Opening</td>
+                                    <td class="px-4 py-4">Executive Dean- Dr Mwayiwawo Madanitsa</td>
+                                </tr>
+                                <tr class="program-item bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">08:55 AM – 09:15 AM</td>
+                                    <td class="px-4 py-4">Beyond MUST: Lessons from my journey through postgraduate study</td>
+                                    <td class="px-4 py-4">Mr. Ashley Kaphinde</td>
+                                </tr>
+                                <tr class="program-item">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">09:15 AM – 09:45 AM</td>
+                                    <td class="px-4 py-4">The Role of Innovation in Advancing Health Research</td>
+                                    <td class="px-4 py-4">Dr Brenda Kwambana</td>
+                                </tr>
+                                <tr class="program-item bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">09:45 AM – 10:15 AM</td>
+                                    <td class="px-4 py-4">Tea Break and Networking</td>
+                                    <td class="px-4 py-4">Ms. Sheena Symon</td>
+                                </tr>
+                                <tr class="program-item">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">10:15 AM – 10:45 AM</td>
+                                    <td class="px-4 py-4">Poster Presentations</td>
+                                    <td class="px-4 py-4">Selected Students/Researchers</td>
+                                </tr>
+                                <tr class="program-item bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">10:45 AM – 11:05 AM</td>
+                                    <td class="px-4 py-4">Research and Career Development</td>
+                                    <td class="px-4 py-4">Professor Janelisa Musaya</td>
+                                </tr>
+                                <tr class="program-item">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">11:05 AM – 11:25 AM</td>
+                                    <td class="px-4 py-4">Life After University</td>
+                                    <td class="px-4 py-4">Mr. Peter Ngwira</td>
+                                </tr>
+                                <tr class="program-item bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">11:25 AM – 11:45 AM</td>
+                                    <td class="px-4 py-4">Finance</td>
+                                    <td class="px-4 py-4">Smile Life Insurance</td>
+                                </tr>
+                                <tr class="program-item">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">11:45 AM – 12:05 PM</td>
+                                    <td class="px-4 py-4">My Journey as a Scientist</td>
+                                    <td class="px-4 py-4">Dr. Tarsizio Chikaonda</td>
+                                </tr>
+                                <tr class="program-item bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">12:05 PM – 01:00 PM</td>
+                                    <td class="px-4 py-4">Lunch Break/Group Photo</td>
+                                    <td class="px-4 py-4">Ms. Sheena Symon/Justice Ndau</td>
+                                </tr>
+                                <tr class="program-item">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">01:00 PM – 01:30 PM</td>
+                                    <td class="px-4 py-4">Panel Discussion: Science with impact</td>
+                                    <td class="px-4 py-4">Panelist: Dr. Tarzio Chikaonda, Prof. Janelisa Musaya, Oscar Kanjala, Mwayi A. Kalulu.</td>
+                                </tr>
+                                <tr class="program-item bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">01:30 PM – 01:45 PM</td>
+                                    <td class="px-4 py-4">Certificate Presentation to the Winning Poster</td>
+                                    <td class="px-4 py-4">Dr Madanitsa and Mr. Peter Ngwira</td>
+                                </tr>
+                                <tr class="program-item">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">01:45 PM – 2:00 PM</td>
+                                    <td class="px-4 py-4">Growth Mindset</td>
+                                    <td class="px-4 py-4">Dr. Tilinde Chokotho</td>
+                                </tr>
+                                <tr class="program-item bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">02:00 PM – 03:00 PM</td>
+                                    <td class="px-4 py-4">Exhibitions Tour</td>
+                                    <td class="px-4 py-4">MLW, UNC, MBS, IBCC, Sports Council of Malawi, WIDREM, SCI4O, NAC, and MOH</td>
+                                </tr>
+                                <tr class="program-item">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">03:00 PM – 03:10 PM</td>
+                                    <td class="px-4 py-4">Closing Remarks</td>
+                                    <td class="px-4 py-4">Dr. Linda Chokotho</td>
+                                </tr>
+                                <tr class="program-item bg-gray-50">
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium text-maroon">03:10 PM onwards</td>
+                                    <td class="px-4 py-4">Networking and Departure</td>
+                                    <td class="px-4 py-4">Mr. Yankho Thawani</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="gradient-bg text-white py-8">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <h3 class="text-xl font-display font-bold mb-2">AMS Career Day</h3>
+                        <p class="text-gray-300">Exploring Careers in Health and Biomedical Sciences</p>
+                    </div>
+                    <div class="text-center md:text-right">
+                        <p class="text-gray-300">In partnership with</p>
+                        <p class="text-xl font-bold text-white">SmileLife</p>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-maroon-light text-center text-gray-300 text-sm">
+                    <p>© 2023 AMS Career Day. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
