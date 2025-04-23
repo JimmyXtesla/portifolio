@@ -1,3 +1,5 @@
+--- START OF FILE index-gf.html ---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,37 +7,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ulemu Chisamba | Biomedical Engineer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
         :root {
             --primary: #7e22ce;
             --primary-dark: #6b21a8;
             --secondary: #a855f7;
             --accent: #e879f9;
-            --dark: #1e1b4b;
-            --light: #faf5ff;
-            --gray: #6b7280;
+            --dark: #1e1b4b; /* Used for overlay */
+            --light: #faf5ff; /* Used for text on dark overlay */
+            --gray: #d1d5db; /* Lighter gray for text on dark */
             --light-purple: #f3e8ff;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
-        
+
         body {
             background-color: #ffffff;
             color: var(--dark);
             line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
         }
-        
+
         /* Header & Navigation */
         header {
             position: fixed;
@@ -48,13 +52,13 @@
             padding: 1.5rem 0;
             transition: all 0.3s ease;
         }
-        
+
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
@@ -64,16 +68,16 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .logo i {
             color: var(--accent);
         }
-        
+
         .nav-links {
             display: flex;
             gap: 2rem;
         }
-        
+
         .nav-links a {
             color: var(--dark);
             text-decoration: none;
@@ -82,11 +86,11 @@
             position: relative;
             padding: 0.5rem 0;
         }
-        
+
         .nav-links a:hover {
             color: var(--primary);
         }
-        
+
         .nav-links a::after {
             content: '';
             position: absolute;
@@ -98,11 +102,11 @@
             transition: width 0.3s;
             border-radius: 3px;
         }
-        
+
         .nav-links a:hover::after {
             width: 100%;
         }
-        
+
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -111,94 +115,98 @@
             color: var(--dark);
             cursor: pointer;
         }
-        
-        /* Hero Section */
+
+        /* Hero Section - NEW STYLE */
         .hero {
-            height: 100vh;
+            min-height: 100vh; /* Use min-height */
             display: flex;
             align-items: center;
-            padding-top: 80px;
-            background: linear-gradient(135deg, #f3e8ff 0%, #ffffff 100%);
+            padding-top: 80px; /* Account for fixed header */
+            padding-bottom: 40px; /* Add some bottom padding */
             position: relative;
             overflow: hidden;
+            background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'); /* Example background image */
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed; /* Optional: Parallax effect */
         }
-        
-        .hero::before {
+
+        .hero::before { /* Dark overlay */
             content: '';
             position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 70%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0) 70%);
-            z-index: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(30, 27, 75, 0.75); /* Using --dark with transparency */
+            z-index: 1;
         }
-        
+
         .hero-content {
             display: flex;
             align-items: center;
             gap: 4rem;
             position: relative;
-            z-index: 1;
+            z-index: 2; /* Content above overlay */
+            width: 100%; /* Ensure container width is used */
         }
-        
+
         .hero-text {
             flex: 1;
+            color: var(--light); /* White text */
         }
-        
+
         .hero-image {
-            flex: 1;
+            flex: 0 0 40%; /* Fixed width for image container */
             display: flex;
             justify-content: center;
+            align-items: center; /* Center image vertically */
+            animation: fadeInRight 1s ease-in-out;
             position: relative;
         }
-        
+
         .hero-image img {
             max-width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 20px 25px -5px rgba(126, 34, 206, 0.2), 0 10px 10px -5px rgba(126, 34, 206, 0.1);
-            border: 5px solid white;
+            height: auto;
+            border-radius: 15px; /* Slightly softer corners */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+            opacity: 0.95; /* Slight transparency to blend */
+            /* Removed border and ::after styling */
         }
-        
-        .hero-image::after {
-            content: '';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            width: 100%;
-            height: 100%;
-            border: 3px solid var(--accent);
-            border-radius: 25px;
-            z-index: -1;
-        }
-        
+
+        /* Removed .hero-image::after rule */
+
         .hero h1 {
             font-size: 3.5rem;
             font-weight: 800;
             margin-bottom: 1.5rem;
             line-height: 1.2;
-            color: var(--primary);
+            color: var(--light); /* White text */
+            animation: fadeInLeft 1s ease-in-out;
         }
-        
+
         .hero h2 {
             font-size: 1.5rem;
             font-weight: 600;
-            color: var(--gray);
+            color: var(--gray); /* Lighter gray for subtitle */
             margin-bottom: 2rem;
+            animation: fadeInLeft 1.2s ease-in-out;
         }
-        
+
         .hero p {
             font-size: 1.1rem;
             margin-bottom: 2.5rem;
-            color: var(--gray);
+            color: var(--gray); /* Lighter gray */
             max-width: 600px;
+            animation: fadeInLeft 1.4s ease-in-out;
         }
-        
+
         .btn-group {
             display: flex;
             gap: 1rem;
+            animation: fadeInUp 1.6s ease-in-out;
         }
-        
+
         .btn {
             display: inline-block;
             padding: 0.8rem 1.8rem;
@@ -207,41 +215,51 @@
             text-decoration: none;
             transition: all 0.3s;
         }
-        
-        .btn-primary {
+
+        .btn-primary { /* Primary button remains similar */
             background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
-            box-shadow: 0 4px 6px rgba(126, 34, 206, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border: none;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 15px rgba(126, 34, 206, 0.3);
         }
-        
-        .btn-secondary {
-            background-color: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            box-shadow: 0 4px 6px rgba(126, 34, 206, 0.1);
+
+        .btn-secondary { /* Secondary button adapted for dark background */
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            box-shadow: none;
         }
-        
+
         .btn-secondary:hover {
-            background-color: var(--light-purple);
+            background-color: rgba(255, 255, 255, 0.1); /* Subtle white overlay on hover */
             transform: translateY(-3px);
-            box-shadow: 0 10px 15px rgba(126, 34, 206, 0.2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
-        
+
         /* About Section */
         .section {
             padding: 6rem 0;
         }
-        
+
+        #about { /* Add top margin to avoid overlap with fixed header */
+            padding-top: 100px;
+            margin-top: -80px; /* Adjust based on header height */
+        }
+
+        .section.bg-light { /* Ensure bg-light has some contrast */
+            background-color: #f9fafb; /* Slightly off-white */
+        }
+
         .section-title {
             text-align: center;
             margin-bottom: 4rem;
         }
-        
+
         .section-title h2 {
             font-size: 2.5rem;
             font-weight: 800;
@@ -249,8 +267,9 @@
             margin-bottom: 1rem;
             position: relative;
             display: inline-block;
+            animation: fadeIn 1s ease-in-out;
         }
-        
+
         .section-title h2::after {
             content: '';
             position: absolute;
@@ -262,31 +281,33 @@
             background: linear-gradient(to right, var(--primary), var(--accent));
             border-radius: 2px;
         }
-        
+
         .section-title p {
-            color: var(--gray);
+            color: #6b7280; /* Original gray for normal sections */
             max-width: 600px;
             margin: 0 auto;
+            animation: fadeIn 1.2s ease-in-out;
         }
-        
+
         .about-content {
             display: flex;
             align-items: center;
             gap: 4rem;
         }
-        
+
         .about-image {
             flex: 1;
             position: relative;
+            animation: fadeInLeft 1s ease-in-out;
         }
-        
+
         .about-image img {
             width: 100%;
             border-radius: 20px;
             box-shadow: 0 20px 25px -5px rgba(126, 34, 206, 0.1);
             border: 5px solid white;
         }
-        
+
         .about-image::before {
             content: '';
             position: absolute;
@@ -298,22 +319,23 @@
             border-radius: 20px;
             z-index: -1;
         }
-        
+
         .about-text {
             flex: 1;
+            animation: fadeInRight 1s ease-in-out;
         }
-        
+
         .about-text h3 {
             font-size: 1.8rem;
             margin-bottom: 1.5rem;
             color: var(--dark);
         }
-        
+
         .about-text p {
             margin-bottom: 1.5rem;
-            color: var(--gray);
+            color: #6b7280; /* Original gray */
         }
-        
+
         .quote {
             font-style: italic;
             padding: 1.5rem;
@@ -323,7 +345,7 @@
             margin: 2rem 0;
             position: relative;
         }
-        
+
         .quote::before {
             content: '"';
             position: absolute;
@@ -334,7 +356,7 @@
             opacity: 0.2;
             font-family: serif;
         }
-        
+
         .fun-fact {
             display: flex;
             align-items: center;
@@ -344,19 +366,27 @@
             border-radius: 8px;
             margin-top: 2rem;
         }
-        
+
         .fun-fact i {
             font-size: 1.5rem;
             color: var(--primary);
         }
-        
+        .fun-fact h4 {
+             color: var(--dark);
+        }
+        .fun-fact p {
+             color: #6b7280; /* Original gray */
+             margin-bottom: 0;
+        }
+
+
         /* Projects Section */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
         }
-        
+
         .project-card {
             background-color: white;
             border-radius: 12px;
@@ -365,12 +395,12 @@
             transition: transform 0.3s, box-shadow 0.3s;
             border: 1px solid #f3e8ff;
         }
-        
+
         .project-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(126, 34, 206, 0.2);
         }
-        
+
         .project-image {
             height: 200px;
             background-color: #f3e8ff;
@@ -380,29 +410,29 @@
             font-size: 3rem;
             color: var(--primary);
         }
-        
+
         .project-content {
             padding: 1.5rem;
         }
-        
+
         .project-content h3 {
             font-size: 1.3rem;
             margin-bottom: 0.5rem;
             color: var(--dark);
         }
-        
+
         .project-content p {
-            color: var(--gray);
+            color: #6b7280; /* Original gray */
             margin-bottom: 1.5rem;
         }
-        
+
         .project-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .tag {
             background-color: #f3e8ff;
             color: var(--primary);
@@ -411,12 +441,12 @@
             font-size: 0.8rem;
             font-weight: 500;
         }
-        
+
         .project-links {
             display: flex;
             gap: 1rem;
         }
-        
+
         .project-links a {
             color: var(--primary);
             text-decoration: none;
@@ -426,15 +456,15 @@
             gap: 0.5rem;
             transition: color 0.3s;
         }
-        
+
         .project-links a:hover {
             color: var(--primary-dark);
         }
-        
+
         .coming-soon {
             position: relative;
         }
-        
+
         .coming-soon::after {
             content: 'Coming Soon';
             position: absolute;
@@ -447,14 +477,14 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-        
+
         /* Skills Section */
         .skills-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 2rem;
         }
-        
+
         .skill-category {
             background-color: white;
             border-radius: 12px;
@@ -463,11 +493,11 @@
             border: 1px solid #f3e8ff;
             transition: transform 0.3s;
         }
-        
+
         .skill-category:hover {
             transform: translateY(-5px);
         }
-        
+
         .skill-category h3 {
             font-size: 1.3rem;
             margin-bottom: 1.5rem;
@@ -476,29 +506,30 @@
             align-items: center;
             gap: 0.8rem;
         }
-        
+
         .skill-category h3 i {
             color: var(--primary);
         }
-        
+
         .skill-list {
             list-style: none;
+            color: #6b7280; /* Original gray */
         }
-        
+
         .skill-list li {
             margin-bottom: 0.8rem;
             display: flex;
             align-items: center;
             gap: 0.8rem;
         }
-        
+
         .skill-list li::before {
             content: '•';
             color: var(--primary);
             font-size: 1.5rem;
             line-height: 0;
         }
-        
+
         /* Resume Section */
         .resume-container {
             background-color: white;
@@ -511,32 +542,45 @@
             text-align: center;
             border: 1px solid #f3e8ff;
         }
-        
+
         .resume-container i {
             font-size: 3rem;
             color: var(--primary);
             margin-bottom: 1.5rem;
         }
-        
+
         .resume-container h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: var(--dark);
         }
-        
+
         .resume-container p {
-            color: var(--gray);
+            color: #6b7280; /* Original gray */
             margin-bottom: 2rem;
             max-width: 600px;
         }
-        
+
+        /* Re-using primary button style here */
+        .resume-container .btn-primary {
+             background: linear-gradient(to right, var(--primary), var(--secondary));
+             color: white;
+             box-shadow: 0 4px 6px rgba(126, 34, 206, 0.2);
+             border: none;
+        }
+        .resume-container .btn-primary:hover {
+             transform: translateY(-3px);
+             box-shadow: 0 10px 15px rgba(126, 34, 206, 0.3);
+        }
+
+
         .achievements {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
-        
+
         .achievement-card {
             background-color: white;
             border-radius: 12px;
@@ -546,62 +590,64 @@
             gap: 1rem;
             border: 1px solid #f3e8ff;
             transition: transform 0.3s;
+            text-align: left; /* Align text left within card */
         }
-        
+
         .achievement-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .achievement-icon {
             font-size: 1.5rem;
             color: var(--primary);
             flex-shrink: 0;
+            padding-top: 0.25rem; /* Align icon better */
         }
-        
+
         .achievement-text h4 {
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
             color: var(--dark);
         }
-        
+
         .achievement-text p {
-            color: var(--gray);
+            color: #6b7280; /* Original gray */
             margin-bottom: 0;
         }
-        
+
         /* Contact Section */
         .contact-container {
             display: flex;
             gap: 4rem;
         }
-        
+
         .contact-info {
             flex: 1;
         }
-        
+
         .contact-info h3 {
             font-size: 1.8rem;
             margin-bottom: 1.5rem;
             color: var(--dark);
         }
-        
+
         .contact-info p {
-            color: var(--gray);
+            color: #6b7280; /* Original gray */
             margin-bottom: 2rem;
         }
-        
+
         .contact-details {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
-        
+
         .contact-item {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        
+
         .contact-item i {
             font-size: 1.2rem;
             color: white;
@@ -613,7 +659,17 @@
             align-items: center;
             justify-content: center;
         }
-        
+        .contact-item h4 {
+             color: var(--dark);
+             margin-bottom: 0.2rem;
+             font-size: 1rem;
+        }
+         .contact-item p {
+             color: #6b7280; /* Original gray */
+             margin-bottom: 0;
+             font-size: 0.95rem;
+         }
+
         .contact-form {
             flex: 1;
             background-color: white;
@@ -622,18 +678,18 @@
             box-shadow: 0 10px 15px -3px rgba(126, 34, 206, 0.1);
             border: 1px solid #f3e8ff;
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--dark);
         }
-        
+
         .form-group input,
         .form-group textarea {
             width: 100%;
@@ -642,26 +698,44 @@
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s;
+            color: #374151; /* Darker text for inputs */
         }
-        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #9ca3af; /* Lighter placeholder text */
+        }
+
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.1);
         }
-        
+
         .form-group textarea {
             min-height: 150px;
             resize: vertical;
         }
-        
+
+         /* Re-using primary button style here */
+        .contact-form .btn-primary {
+             background: linear-gradient(to right, var(--primary), var(--secondary));
+             color: white;
+             box-shadow: 0 4px 6px rgba(126, 34, 206, 0.2);
+             border: none;
+        }
+        .contact-form .btn-primary:hover {
+             transform: translateY(-3px);
+             box-shadow: 0 10px 15px rgba(126, 34, 206, 0.3);
+        }
+
+
         .social-links {
             display: flex;
             gap: 1rem;
             margin-top: 2rem;
         }
-        
+
         .social-links a {
             width: 40px;
             height: 40px;
@@ -671,14 +745,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.1rem; /* Slightly larger icons */
             transition: all 0.3s;
         }
-        
+
         .social-links a:hover {
             transform: translateY(-3px) scale(1.1);
             box-shadow: 0 5px 10px rgba(126, 34, 206, 0.3);
         }
-        
+
         /* Footer */
         footer {
             background: linear-gradient(to right, var(--primary), var(--primary-dark));
@@ -686,13 +761,13 @@
             padding: 3rem 0;
             text-align: center;
         }
-        
+
         .footer-content {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        
+
         .footer-logo {
             font-size: 1.5rem;
             font-weight: 700;
@@ -701,58 +776,83 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            text-decoration: none; /* Remove underline */
         }
-        
+
         .footer-links {
             display: flex;
             gap: 2rem;
             margin-bottom: 2rem;
         }
-        
+
         .footer-links a {
             color: white;
             text-decoration: none;
             transition: all 0.3s;
         }
-        
+
         .footer-links a:hover {
             color: var(--accent);
             transform: translateY(-2px);
         }
-        
+
         .copyright {
-            color: #d8b4fe;
+            color: #d8b4fe; /* Light purple from palette */
         }
-        
+
         /* Responsive Design */
         @media (max-width: 992px) {
-            .hero-content, .about-content, .contact-container {
+            .hero-content {
                 flex-direction: column;
+                text-align: center; /* Center text when stacked */
+                gap: 2rem; /* Reduce gap when stacked */
             }
-            
+            .hero-text {
+                max-width: 600px; /* Limit text width */
+            }
+            .hero-image {
+                flex: 0 0 auto; /* Reset flex basis */
+                width: 60%; /* Control image size */
+                max-width: 350px; /* Max size */
+                margin-top: 2rem; /* Add space above image */
+            }
+
             .hero {
-                height: auto;
+                min-height: auto; /* Allow height to adjust */
                 padding: 120px 0 80px;
             }
-            
+
             .hero h1 {
                 font-size: 2.8rem;
             }
-            
+
+            .about-content,
+            .contact-container {
+                flex-direction: column;
+                gap: 3rem; /* Adjust gap for column layout */
+            }
+             .contact-info, .contact-form {
+                  width: 100%; /* Take full width */
+             }
+
+
             .section {
                 padding: 4rem 0;
             }
-            
-            .hero-image::after, .about-image::before {
+
+            .about-image::before {
                 display: none;
             }
         }
-        
+
         @media (max-width: 768px) {
+             header {
+                 padding: 1rem 0; /* Reduce header padding */
+             }
             .nav-links {
                 display: none;
                 position: fixed;
-                top: 80px;
+                top: 68px; /* Adjust based on new header padding */
                 left: 0;
                 right: 0;
                 background-color: white;
@@ -761,39 +861,74 @@
                 box-shadow: 0 10px 15px rgba(126, 34, 206, 0.1);
                 gap: 1.5rem;
             }
-            
+
             .nav-links.show {
                 display: flex;
             }
-            
+
             .mobile-menu-btn {
                 display: block;
             }
-            
+
             .hero h1 {
                 font-size: 2.2rem;
             }
-            
+
             .hero h2 {
                 font-size: 1.2rem;
             }
-            
+
             .btn-group {
                 flex-direction: column;
+                align-items: center; /* Center buttons in column */
             }
-            
+            .btn-group .btn {
+                width: 80%; /* Make buttons wider on mobile */
+                max-width: 300px;
+                text-align: center;
+            }
+
             .section-title h2 {
                 font-size: 2rem;
             }
+             .projects-grid {
+                 grid-template-columns: 1fr; /* Single column */
+             }
+             .skills-container {
+                  grid-template-columns: 1fr; /* Single column */
+             }
+             .achievements {
+                  grid-template-columns: 1fr; /* Single column */
+             }
+             .footer-links {
+                 flex-direction: column; /* Stack footer links */
+                 gap: 1rem;
+             }
+        }
+
+
+        /* Animation Keyframes (remain the same) */
+        @keyframes fadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <header>
         <div class="container">
             <nav>
-                <a href="#" class="logo"><i class="fas fa-heart-pulse"></i> Ulemu Chisamba</a>
+                <a href="#" class="logo"><i class="fas fa-heart-pulse"></i> Ulemu X.</a>
                 <div class="nav-links">
                     <a href="#about">About</a>
                     <a href="#projects">Projects</a>
@@ -813,16 +948,17 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Ulemu Chisamba</h1>
-                    <h2>Biomedical Engineering Student | Future Innovator</h2>
-                    <p>Passionate about developing medical technologies that improve healthcare accessibility and patient outcomes.</p>
-                    <div class="btn-group">
+                    <h1 class="animate__animated animate__fadeInLeft">Ulemu Chisamba</h1>
+                    <h2 class="animate__animated animate__fadeInLeft">Biomedical Engineering Student | Future Innovator</h2>
+                    <p class="animate__animated animate__fadeInLeft">Passionate about developing medical technologies that improve healthcare
+                        accessibility and patient outcomes.</p>
+                    <div class="btn-group animate__animated animate__fadeInUp">
                         <a href="#projects" class="btn btn-primary">View Projects</a>
-                        <a href="#" class="btn btn-secondary">Download CV</a>
+                        <a href="#" class="btn btn-secondary">Download CV</a> 
                     </div>
                 </div>
                 <div class="hero-image">
-                    <img src="https://images.unsplash.com/photo-1581093450021-4a7360e9a6a4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80" alt="Ulemu C">
+                     <img src="uc.JPG" alt="Ulemu Chisamba"> 
                 </div>
             </div>
         </div>
@@ -832,24 +968,28 @@
     <section id="about" class="section">
         <div class="container">
             <div class="section-title">
-                <h2>About Me</h2>
-                <p>Get to know the aspiring biomedical engineer behind the projects</p>
+                <h2 class="animate__animated animate__fadeIn">About Me</h2>
+                <p class="animate__animated animate__fadeIn">Get to know the aspiring biomedical engineer behind the projects</p>
             </div>
             <div class="about-content">
                 <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80" alt="Ulemu C.">
+                     <img src="https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80" alt="Lab research setting">
                 </div>
                 <div class="about-text">
                     <h3>My Journey</h3>
-                    <p>I'm a second-year Biomedical Engineering student passionate about merging medicine with technology to create innovative healthcare solutions. My academic journey has been fueled by a desire to understand the human body and develop technologies that can improve lives.</p>
-                    <p>I'm particularly interested in medical device design, biomechanics, and healthcare technology management. My goal is to contribute to developing affordable medical solutions for underserved communities.</p>
-                    
+                    <p>I'm a second-year Biomedical Engineering student passionate about merging medicine with technology to create innovative
+                        healthcare solutions. My academic journey has been fueled by a desire to understand the human body and develop
+                        technologies that can improve lives.</p>
+                    <p>I'm particularly interested in medical device design, biomechanics, and healthcare technology management. My goal is to
+                        contribute to developing affordable medical solutions for underserved communities.</p>
+
                     <div class="quote">
                         "Engineering is not just about solving problems, but about improving lives through innovation and compassion."
                     </div>
-                    
-                    <p>When I'm not studying or working on projects, you can find me volunteering at health awareness campaigns, mentoring younger STEM students, or exploring the latest advancements in medical technology.</p>
-                    
+
+                    <p>When I'm not studying or working on projects, you can find me volunteering at health awareness campaigns, mentoring
+                        younger STEM students, or exploring the latest advancements in medical technology.</p>
+
                     <div class="fun-fact">
                         <i class="fas fa-lightbulb"></i>
                         <div>
@@ -866,12 +1006,12 @@
     <section id="projects" class="section bg-light">
         <div class="container">
             <div class="section-title">
-                <h2>Projects</h2>
-                <p>Explore my work at the intersection of medicine and engineering</p>
+                <h2 class="animate__animated animate__fadeIn">Projects</h2>
+                <p class="animate__animated animate__fadeIn">Explore my work at the intersection of medicine and engineering</p>
             </div>
             <div class="projects-grid">
                 <!-- Project 1 -->
-                <div class="project-card">
+                <div class="project-card animate__animated animate__fadeInUp" data-wow-delay="0.1s">
                     <div class="project-image" style="background-color: #f3e8ff;">
                         <i class="fas fa-heartbeat"></i>
                     </div>
@@ -888,9 +1028,9 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Project 2 -->
-                <div class="project-card">
+                <div class="project-card animate__animated animate__fadeInUp" data-wow-delay="0.2s">
                     <div class="project-image" style="background-color: #f0e9ff;">
                         <i class="fas fa-bone"></i>
                     </div>
@@ -907,9 +1047,9 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Project 3 -->
-                <div class="project-card">
+                <div class="project-card animate__animated animate__fadeInUp" data-wow-delay="0.3s">
                     <div class="project-image" style="background-color: #ede6ff;">
                         <i class="fas fa-brain"></i>
                     </div>
@@ -926,9 +1066,9 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Project 4 -->
-                <div class="project-card coming-soon">
+                <div class="project-card coming-soon animate__animated animate__fadeInUp" data-wow-delay="0.4s">
                     <div class="project-image" style="background-color: #e9d8ff;">
                         <i class="fas fa-microscope"></i>
                     </div>
@@ -940,14 +1080,12 @@
                             <span class="tag">Lab-on-Chip</span>
                             <span class="tag">Diagnostics</span>
                         </div>
-                        <div class="project-links">
-                            <a href="#"><i class="fas fa-external-link-alt"></i> Learn More</a>
+                        <div class="project-links"> <a href="#"><i class="fas fa-external-link-alt"></i> Learn More</a>
                         </div>
                     </div>
                 </div>
-                
                 <!-- Project 5 -->
-                <div class="project-card">
+                <div class="project-card animate__animated animate__fadeInUp" data-wow-delay="0.5s">
                     <div class="project-image" style="background-color: #e5d6ff;">
                         <i class="fas fa-lungs"></i>
                     </div>
@@ -972,12 +1110,12 @@
     <section id="skills" class="section">
         <div class="container">
             <div class="section-title">
-                <h2>Skills</h2>
-                <p>The tools and technologies I work with</p>
+                <h2 class="animate__animated animate__fadeIn">Skills</h2>
+                <p class="animate__animated animate__fadeIn">The tools and technologies I work with</p>
             </div>
             <div class="skills-container">
                 <!-- Skill Category 1 -->
-                <div class="skill-category">
+                <div class="skill-category animate__animated animate__fadeInUp" data-wow-delay="0.1s">
                     <h3><i class="fas fa-cogs"></i> Engineering</h3>
                     <ul class="skill-list">
                         <li>CAD (SolidWorks, AutoCAD)</li>
@@ -987,9 +1125,9 @@
                         <li>Medical Device Prototyping</li>
                     </ul>
                 </div>
-                
+
                 <!-- Skill Category 2 -->
-                <div class="skill-category">
+                <div class="skill-category animate__animated animate__fadeInUp" data-wow-delay="0.2s">
                     <h3><i class="fas fa-laptop-code"></i> Programming</h3>
                     <ul class="skill-list">
                         <li>MATLAB</li>
@@ -999,9 +1137,9 @@
                         <li>LabVIEW</li>
                     </ul>
                 </div>
-                
+
                 <!-- Skill Category 3 -->
-                <div class="skill-category">
+                <div class="skill-category animate__animated animate__fadeInUp" data-wow-delay="0.3s">
                     <h3><i class="fas fa-flask"></i> Biomedical</h3>
                     <ul class="skill-list">
                         <li>Physiology</li>
@@ -1011,9 +1149,9 @@
                         <li>Signal Processing</li>
                     </ul>
                 </div>
-                
+
                 <!-- Skill Category 4 -->
-                <div class="skill-category">
+                <div class="skill-category animate__animated animate__fadeInUp" data-wow-delay="0.4s">
                     <h3><i class="fas fa-users"></i> Soft Skills</h3>
                     <ul class="skill-list">
                         <li>Team Leadership</li>
@@ -1031,18 +1169,18 @@
     <section id="resume" class="section bg-light">
         <div class="container">
             <div class="section-title">
-                <h2>Resume & Achievements</h2>
-                <p>My academic journey and milestones</p>
+                <h2 class="animate__animated animate__fadeIn">Resume & Achievements</h2>
+                <p class="animate__animated animate__fadeIn">My academic journey and milestones</p>
             </div>
-            <div class="resume-container">
+            <div class="resume-container animate__animated animate__fadeInUp">
                 <i class="fas fa-file-alt"></i>
                 <h3>Download My Full Resume</h3>
                 <p>Get a comprehensive overview of my education, projects, and technical skills in PDF format.</p>
                 <a href="#" class="btn btn-primary">Download CV</a>
-                
+
                 <div class="achievements">
                     <!-- Achievement 1 -->
-                    <div class="achievement-card">
+                    <div class="achievement-card animate__animated animate__fadeInUp" data-wow-delay="0.1s">
                         <div class="achievement-icon">
                             <i class="fas fa-award"></i>
                         </div>
@@ -1051,9 +1189,9 @@
                             <p>Consistently recognized for academic excellence in Biomedical Engineering program.</p>
                         </div>
                     </div>
-                    
+
                     <!-- Achievement 2 -->
-                    <div class="achievement-card">
+                    <div class="achievement-card animate__animated animate__fadeInUp" data-wow-delay="0.2s">
                         <div class="achievement-icon">
                             <i class="fas fa-trophy"></i>
                         </div>
@@ -1062,9 +1200,9 @@
                             <p>Won university competition for portable medical device design.</p>
                         </div>
                     </div>
-                    
+
                     <!-- Achievement 3 -->
-                    <div class="achievement-card">
+                    <div class="achievement-card animate__animated animate__fadeInUp" data-wow-delay="0.3s">
                         <div class="achievement-icon">
                             <i class="fas fa-microscope"></i>
                         </div>
@@ -1082,23 +1220,23 @@
     <section id="contact" class="section">
         <div class="container">
             <div class="section-title">
-                <h2>Get In Touch</h2>
-                <p>Let's collaborate on innovative healthcare solutions</p>
+                <h2 class="animate__animated animate__fadeIn">Get In Touch</h2>
+                <p class="animate__animated animate__fadeIn">Let's collaborate on innovative healthcare solutions</p>
             </div>
             <div class="contact-container">
-                <div class="contact-info">
+                <div class="contact-info animate__animated animate__fadeInLeft">
                     <h3>Contact Information</h3>
                     <p>I'm always open to discussing research opportunities, collaborations, or mentorship possibilities.</p>
-                    
+
                     <div class="contact-details">
                         <div class="contact-item">
                             <i class="fas fa-envelope"></i>
                             <div>
                                 <h4>Email</h4>
-                                <p>bme000423@must.ac.mw</p>
+                                <p><a href="mailto:ulemu.chisamba@example.com" style="color: inherit; text-decoration: none;">ulemu.chisamba@example.com</a></p>
                             </div>
                         </div>
-                        
+
                         <div class="contact-item">
                             <i class="fas fa-map-marker-alt"></i>
                             <div>
@@ -1106,7 +1244,7 @@
                                 <p>University Campus / Remote</p>
                             </div>
                         </div>
-                        
+
                         <div class="contact-item">
                             <i class="fas fa-calendar-alt"></i>
                             <div>
@@ -1115,17 +1253,135 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-researchgate"></i></a>
+                        <a href="#" target="_blank" aria-label="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" target="_blank" aria-label="Twitter Profile"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank" aria-label="GitHub Profile"><i class="fab fa-github"></i></a>
+                        <a href="#" target="_blank" aria-label="ResearchGate Profile"><i class="fab fa-researchgate"></i></a>
                     </div>
                 </div>
-                
-                <div class="contact-form">
-                    <form>
+
+                <div class="contact-form animate__animated animate__fadeInRight">
+                    <form action="#" method="POST"> 
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" id="name"
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <a href="#" class="footer-logo"><i class="fas fa-heart-pulse"></i> Ulemu Chisamba</a>
+                <div class="footer-links">
+                    <a href="#about">About</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#resume">Resume</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <p class="copyright">© 2023 Ulemu Chisamba. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const navLinkItems = document.querySelectorAll('.nav-links a'); // Get all nav links
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+            // Optional: Toggle icon between bars and close (x)
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navLinks.classList.contains('show')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close mobile menu when a link is clicked
+        navLinkItems.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinks.classList.contains('show')) {
+                    navLinks.classList.remove('show');
+                    // Reset icon to bars
+                    const icon = mobileMenuBtn.querySelector('i');
+                     icon.classList.remove('fa-times');
+                     icon.classList.add('fa-bars');
+                }
+            });
+        });
+
+        // Optional: Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // Only prevent default for actual section links, not href="#"
+                if (this.getAttribute('href') !== '#') {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        const headerOffset = document.querySelector('header').offsetHeight; // Get header height
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                    }
+                }
+            });
+        });
+
+        // Optional: Add scroll animations (requires adding 'wow' and delay classes + library)
+        // Example using Animate.css built-in features (already linked)
+        // Add class="animate__animated" and specific animation like "animate__fadeInUp"
+        // to elements you want to animate on scroll. You might need a JS library
+        // like WOW.js or Intersection Observer API for trigger on scroll.
+        // Simple Intersection Observer example:
+        const animatedElements = document.querySelectorAll('.animate__animated');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Add animation classes - already present, just ensure visibility triggers if needed
+                    // entry.target.classList.add('animate__fadeInUp'); // Or other animation
+                    // Optionally remove observer after animation
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 }); // Trigger when 10% visible
+
+        animatedElements.forEach(el => {
+            // Only observe elements intended for scroll animation (maybe add a specific class like 'wow'?)
+             if(el.closest('.section') || el.closest('.hero-content')) { // Example condition
+                 observer.observe(el);
+             }
+        });
+
+
+    </script>
+    <!-- End of main content -->
+</body>
+</html>
