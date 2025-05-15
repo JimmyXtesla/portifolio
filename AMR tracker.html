@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital AMR Tracking Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #071A52; /* Deep Blue */
+            --primary-medium: #086972; /* Dark Teal/Blue */
+            --accent-teal: #17A2B8; /* Lighter Teal - Bootstrap Info-like */
+            --positive-green: #22bb33; /* Brighter Green */
+            --negative-red: #bb2124; /* Darker, less harsh Red */
+            --warning-orange: #f0ad4e; /* Bootstrap Warning Orange */
+            --neutral-gray: #6c757d; /* Bootstrap Secondary Gray */
+            
+            --white: #ffffff;
+            --light-gray-bg: #eef1f5; /* Softer light gray for body */
+            --dark-text: #212529; /* Bootstrap Dark text */
+            --medium-text: #495057;
+
+            --bs-body-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-gray-bg);
+            font-family: var(--bs-body-font-family);
+            color: var(--dark-text);
+        }
+        
+        /* Sidebar Styling */
+        .sidebar {
+            background-color: var(--white);
+            border-right: 1px solid #dee2e6;
+            transition: transform .3s ease-in-out, width .3s ease-in-out;
+        }
+        /* For static sidebar on lg+ screens */
+        @media (min-width: 992px) {
+            .sidebar.offcanvas-lg {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+            }
+            .main-content-wrapper {
+                padding-left: 0; /* Ensure no double padding */
+            }
+        }
+        .sidebar-header {
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--primary-medium);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        .filter-section {
+            margin-bottom: 1.5rem;
+        }
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--primary-medium);
+            font-size: 0.95rem;
+        }
+        .form-check-label {
+            font-size: 0.9rem;
+        }
+        .form-select, .form-control {
+            font-size: 0.9rem;
+        }
+
+        /* Main Dashboard Header (inside main content) */
+        .dashboard-header-card {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--white);
+            padding: 1.5rem; /* Reduced padding from original */
+            margin-bottom: 2rem;
+            border-radius: 0.5rem; /* Standard Bootstrap border-radius */
+            border-bottom: 4px solid var(--accent-teal);
+        }
+        .dashboard-header-card h1 {
+            font-size: 1.75rem; /* Responsive H1 */
+        }
+        .dashboard-header-card p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        @media (min-width: 768px) {
+            .dashboard-header-card h1 {
+                font-size: 2.25rem;
+            }
+        }
+
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+            margin-bottom: 1.5rem; /* Standardized margin */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: var(--white); /* Cleaner card headers */
+            color: var(--primary-dark);
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            background-color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .metric-card .metric-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-medium);
+        }
+        .metric-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin: 0.25rem 0;
+            color: var(--dark-text);
+        }
+        .metric-title {
+            color: var(--medium-text);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .metric-card.border-start-positive { border-left: 4px solid var(--positive-green) !important; }
+        .metric-card.border-start-negative { border-left: 4px solid var(--negative-red) !important; }
+        .metric-card.border-start-neutral { border-left: 4px solid var(--accent-teal) !important; }
+
+        .trend-positive { color: var(--negative-red); } /* Increasing resistance is bad */
+        .trend-negative { color: var(--positive-green); } /* Decreasing resistance is good */
+        .trend-stable { color: var(--neutral-gray); }
+        
+        /* Navigation Tabs */
+        .nav-pills .nav-link {
+            color: var(--primary-medium);
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+            border-radius: 0.375rem; /* Bootstrap's default btn radius */
+        }
+        .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+            background-color: var(--primary-medium);
+            color: var(--white);
+        }
+        .nav-pills .nav-link:not(.active):hover {
+            background-color: #e0e7ef;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 320px; /* Default height */
+            margin-bottom: 1rem;
+        }
+        
+        /* Tables */
+        .table thead {
+            background-color: var(--primary-medium);
+            color: var(--white);
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(23, 162, 184, 0.07); /* Light accent-teal */
+        }
+        .data-table {
+            background-color: var(--white);
+        }
+        
+        /* Badges */
+        .badge-trend {
+            padding: 0.4em 0.65em;
+            font-weight: 600;
+            font-size: 0.8em;
+        }
+        .badge-increasing { background-color: var(--negative-red); color: var(--white); }
+        .badge-decreasing { background-color: var(--positive-green); color: var(--white); }
+        .badge-stable { background-color: var(--neutral-gray); color: var(--white); }
+        
+        /* Main Content Area */
+        .main-content-wrapper {
+            padding: 1.5rem;
+        }
+        @media (max-width: 991.98px) { /* Below LG breakpoint where sidebar is offcanvas */
+            .main-content-wrapper {
+                padding-left: 1.5rem; /* Ensure consistent padding when sidebar is offcanvas */
+            }
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            padding: 1.5rem 0 1rem 0;
+            border-top: 1px solid #dee2e6;
+            font-size: 0.85rem;
+            color: var(--neutral-gray);
+        }
+
+        /* Offcanvas specific tweaks */
+        .offcanvas-lg {
+            max-width: 280px; /* Control width of static sidebar */
+        }
+        .offcanvas-header {
+            border-bottom: 1px solid #dee2e6;
+        }
+        .sidebar .btn-primary { /* Apply Filters button */
+            background-color: var(--primary-medium);
+            border-color: var(--primary-medium);
+        }
+        .sidebar .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Sidebar: Offcanvas below LG, static on LG+ -->
+            <nav id="sidebar" class="col-auto col-lg-2 sidebar offcanvas-lg offcanvas-start p-0" tabindex="-1" aria-labelledby="sidebarLabel">
+                <div class="offcanvas-header d-lg-none p-3">
+                   <h5 class="offcanvas-title" id="sidebarLabel"><i class="fas fa-filter me-2"></i>Filters</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body d-flex flex-column p-3">
+                    <h4 class="sidebar-header d-none d-lg-block">
+                        <i class="fas fa-filter me-2"></i>Filters
+                    </h4>
+                    
+                    <div class="filter-section">
+                        <div class="filter-title">Time Period</div>
+                        <select class="form-select" id="timePeriod">
+                            <option value="6">Last 6 Months</option>
+                            <option value="12" selected>Last 12 Months</option>
+                            <option value="24">Last 24 Months</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <div class="filter-title">Wards</div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="ICU" id="wardICU" checked><label class="form-check-label" for="wardICU">ICU</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Medical" id="wardMedical" checked><label class="form-check-label" for="wardMedical">Medical</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Surgical" id="wardSurgical" checked><label class="form-check-label" for="wardSurgical">Surgical</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Pediatrics" id="wardPediatrics" checked><label class="form-check-label" for="wardPediatrics">Pediatrics</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Oncology" id="wardOncology" checked><label class="form-check-label" for="wardOncology">Oncology</label></div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <div class="filter-title">Pathogens</div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="E. coli" id="pathogenEColi" checked><label class="form-check-label" for="pathogenEColi">E. coli</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="K. pneumoniae" id="pathogenKPneumoniae" checked><label class="form-check-label" for="pathogenKPneumoniae">K. pneumoniae</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="S. aureus" id="pathogenSAureus" checked><label class="form-check-label" for="pathogenSAureus">S. aureus</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="P. aeruginosa" id="pathogenPAeruginosa" checked><label class="form-check-label" for="pathogenPAeruginosa">P. aeruginosa</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Enterococcus spp." id="pathogenEnterococcus" checked><label class="form-check-label" for="pathogenEnterococcus">Enterococcus spp.</label></div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <div class="filter-title">Antibiotics</div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Ciprofloxacin" id="abxCiprofloxacin" checked><label class="form-check-label" for="abxCiprofloxacin">Ciprofloxacin</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Meropenem" id="abxMeropenem" checked><label class="form-check-label" for="abxMeropenem">Meropenem</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Vancomycin" id="abxVancomycin" checked><label class="form-check-label" for="abxVancomycin">Vancomycin</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Ceftriaxone" id="abxCeftriaxone" checked><label class="form-check-label" for="abxCeftriaxone">Ceftriaxone</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="Piperacillin-Tazobactam" id="abxPipTazo" checked><label class="form-check-label" for="abxPipTazo">Pip-Tazobactam</label></div>
+                    </div>
+                    
+                    <button class="btn btn-primary w-100 mt-auto" id="applyFilters">
+                        <i class="fas fa-sync-alt me-2"></i>Apply Filters
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Main Content Wrapper -->
+            <main class="col ps-md-2 pt-2 main-content-wrapper">
+                <!-- Header Card -->
+                <div class="dashboard-header-card">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1><i class="fas fa-shield-virus me-3"></i>Hospital AMR Dashboard</h1>
+                            <p class="d-none d-sm-block">Monitor antimicrobial resistance patterns to guide stewardship efforts</p>
+                        </div>
+                        <div class="col-auto text-end">
+                             <button class="btn btn-outline-light d-lg-none mb-2 mb-sm-0 me-sm-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+                                <i class="fas fa-filter"></i> <span class="d-none d-sm-inline">Filters</span>
+                            </button>
+                            <span class="badge bg-light text-primary fs-6 me-2"><i class="fas fa-wifi text-success me-1"></i>Live Data</span>
+                            <div class="small mt-1 d-none d-md-block" style="opacity:0.8;">Last updated: <span id="lastUpdated">Just now</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Key Metrics -->
+                <div class="row mb-2"> <!-- Reduced margin bottom slightly -->
+                    <div class="col-6 col-md-6 col-xl-3 mb-3">
+                        <div class="card metric-card h-100 border-start-neutral">
+                            <div class="metric-icon"><i class="fas fa-notes-medical"></i></div>
+                            <div class="metric-title">Total Tests</div>
+                            <div class="metric-value">4,287</div>
+                            <div class="text-muted small">+12% <span class="d-none d-sm-inline">from last period</span></div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-6 col-xl-3 mb-3">
+                        <div class="card metric-card h-100 border-start-positive">
+                             <div class="metric-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="metric-title">Avg Resistance Rate</div>
+                            <div class="metric-value">34.5%</div>
+                            <div class="text-muted small"><span class="trend-negative">-2.1%</span> <span class="d-none d-sm-inline">from last period</span></div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-6 col-xl-3 mb-3">
+                        <div class="card metric-card h-100 border-start-negative">
+                            <div class="metric-icon"><i class="fas fa-arrow-trend-up"></i></div>
+                            <div class="metric-title">Increasing Trends</div>
+                            <div class="metric-value trend-positive">8</div>
+                            <div class="text-muted small">Critical: 3</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-6 col-xl-3 mb-3">
+                        <div class="card metric-card h-100 border-start-positive">
+                             <div class="metric-icon"><i class="fas fa-arrow-trend-down"></i></div>
+                            <div class="metric-title">Decreasing Trends</div>
+                            <div class="metric-value trend-negative">5</div>
+                            <div class="text-muted small"><span class="text-success">+3</span> <span class="d-none d-sm-inline">from last period</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs -->
+                <ul class="nav nav-pills mb-4" id="dashboardTabs" role="tablist">
+                    <li class="nav-item" role="presentation"><button class="nav-link active" id="trends-tab" data-bs-toggle="pill" data-bs-target="#trends" type="button" role="tab"><i class="fas fa-chart-line me-2"></i>Trend Analysis</button></li>
+                    <li class="nav-item" role="presentation"><button class="nav-link" id="pathogens-tab" data-bs-toggle="pill" data-bs-target="#pathogens" type="button" role="tab"><i class="fas fa-virus me-2"></i>Pathogen Focus</button></li>
+                    <li class="nav-item" role="presentation"><button class="nav-link" id="wards-tab" data-bs-toggle="pill" data-bs-target="#wards" type="button" role="tab"><i class="fas fa-bed-pulse me-2"></i>Ward Comparison</button></li>
+                    <li class="nav-item" role="presentation"><button class="nav-link" id="stewardship-tab" data-bs-toggle="pill" data-bs-target="#stewardship" type="button" role="tab"><i class="fas fa-hand-holding-medical me-2"></i>Stewardship</button></li>
+                </ul>
+                
+                <!-- Tab Content -->
+                <div class="tab-content" id="dashboardTabsContent">
+                    <!-- Trends Tab -->
+                    <div class="tab-pane fade show active" id="trends" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12 col-xl-8 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header"><i class="fas fa-chart-line me-2"></i>Resistance Trends Over Time</div>
+                                    <div class="card-body"><div class="chart-container" style="height: 350px;"><canvas id="trendChart"></canvas></div></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-xl-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header"><i class="fas fa-thermometer-three-quarters me-2"></i>Current Resistance Rates</div>
+                                    <div class="card-body"><div class="chart-container" style="height: 350px;"><canvas id="currentResistanceChart"></canvas></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header"><i class="fas fa-triangle-exclamation me-2"></i>Critical Resistance Alerts</div>
+                                    <div class="card-body"><div class="table-responsive"><table class="table table-hover data-table">
+                                        <thead><tr><th>Pathogen</th><th>Antibiotic</th><th>Ward</th><th>Rate</th><th>Trend</th><th>Tests</th><th>Action</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>K. pneumoniae</td><td>Meropenem</td><td>ICU</td><td>78%</td><td><span class="badge badge-trend badge-increasing">Increasing</span></td><td>45</td><td><button class="btn btn-sm btn-outline-danger">Review</button></td></tr>
+                                            <tr><td>P. aeruginosa</td><td>Pip-Tazo</td><td>Oncology</td><td>65%</td><td><span class="badge badge-trend badge-increasing">Increasing</span></td><td>32</td><td><button class="btn btn-sm btn-outline-danger">Review</button></td></tr>
+                                            <tr><td>E. coli</td><td>Ciprofloxacin</td><td>Medical</td><td>58%</td><td><span class="badge badge-trend badge-stable">Stable</span></td><td>87</td><td><button class="btn btn-sm btn-outline-secondary">Monitor</button></td></tr>
+                                            <tr><td>S. aureus</td><td>Vancomycin</td><td>Surgical</td><td>12%</td><td><span class="badge badge-trend badge-decreasing">Decreasing</span></td><td>63</td><td><button class="btn btn-sm btn-outline-success">Track</button></td></tr>
+                                        </tbody>
+                                    </table></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pathogens Tab -->
+                    <div class="tab-pane fade" id="pathogens" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12 col-md-5 col-lg-4 mb-4">
+                                <div class="card"><div class="card-header"><i class="fas fa-diagnoses me-2"></i>Select Pathogen</div>
+                                    <div class="card-body"><select class="form-select" id="pathogenSelect">
+                                        <option value="E. coli">E. coli</option><option value="K. pneumoniae">K. pneumoniae</option><option value="S. aureus">S. aureus</option><option value="P. aeruginosa">P. aeruginosa</option><option value="Enterococcus spp.">Enterococcus spp.</option>
+                                    </select></div>
+                                </div>
+                                <div class="card mt-4"><div class="card-header"><i class="fas fa-info-circle me-2"></i>Pathogen Summary</div>
+                                    <div class="card-body">
+                                        <h5 id="selectedPathogenName" class="text-primary-medium">E. coli</h5>
+                                        <p id="pathogenDescription" class="small text-medium-text">Gram-negative bacterium commonly found in the lower intestine.</p>
+                                        <div class="mt-3"><h6>Resistance Snapshot:</h6>
+                                            <div class="d-flex justify-content-between mb-1 small"><span>Highest:</span><strong id="highestResistance">Ciprofloxacin (62%)</strong></div>
+                                            <div class="d-flex justify-content-between mb-1 small"><span>Lowest:</span><strong id="lowestResistance">Meropenem (8%)</strong></div>
+                                            <div class="d-flex justify-content-between small"><span>Top Ward:</span><strong id="commonWard">Medical (42%)</strong></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-7 col-lg-8">
+                                <div class="card mb-4"><div class="card-header"><i class="fas fa-vial-virus me-2"></i>Resistance by Antibiotic</div>
+                                    <div class="card-body"><div class="chart-container"><canvas id="pathogenResistanceChart"></canvas></div></div>
+                                </div>
+                                <div class="card"><div class="card-header"><i class="fas fa-timeline me-2"></i>Historical Trends</div>
+                                    <div class="card-body"><div class="chart-container"><canvas id="pathogenTrendChart"></canvas></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Wards Tab -->
+                    <div class="tab-pane fade" id="wards" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12 col-xl-6 mb-4">
+                                <div class="card h-100"><div class="card-header"><i class="fas fa-clinic-medical me-2"></i>Resistance by Ward</div>
+                                    <div class="card-body"><div class="chart-container" style="height:350px;"><canvas id="wardResistanceChart"></canvas></div></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-xl-6 mb-4">
+                                <div class="card h-100"><div class="card-header"><i class="fas fa-chart-pie me-2"></i>Ward Test Distribution</div>
+                                    <div class="card-body"><div class="chart-container" style="height:350px;"><canvas id="wardDistributionChart"></canvas></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="card"><div class="card-header"><i class="fas fa-table-list me-2"></i>Ward-Specific Data</div>
+                                    <div class="card-body"><div class="table-responsive"><table class="table table-hover data-table" id="wardDataTable">
+                                        <thead><tr><th>Ward</th><th>Tests</th><th>Avg Resist.</th><th>Top Pathogen</th><th>Top Antibiotic</th><th>Trend</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>ICU</td><td>1,245</td><td>48%</td><td>K. pneumoniae</td><td>Meropenem</td><td><span class="badge badge-trend badge-increasing">Increasing</span></td></tr>
+                                            <tr><td>Medical</td><td>987</td><td>32%</td><td>E. coli</td><td>Ciprofloxacin</td><td><span class="badge badge-trend badge-stable">Stable</span></td></tr>
+                                            <tr><td>Surgical</td><td>856</td><td>28%</td><td>S. aureus</td><td>Vancomycin</td><td><span class="badge badge-trend badge-decreasing">Decreasing</span></td></tr>
+                                            <tr><td>Pediatrics</td><td>723</td><td>25%</td><td>P. aeruginosa</td><td>Ceftazidime</td><td><span class="badge badge-trend badge-stable">Stable</span></td></tr>
+                                            <tr><td>Oncology</td><td>476</td><td>41%</td><td>P. aeruginosa</td><td>Pip-Tazo</td><td><span class="badge badge-trend badge-increasing">Increasing</span></td></tr>
+                                        </tbody>
+                                    </table></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stewardship Tab -->
+                    <div class="tab-pane fade" id="stewardship" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 mb-4">
+                                <div class="card"><div class="card-header"><i class="fas fa-exclamation-triangle me-2"></i>Top Resistance Concerns</div>
+                                    <div class="card-body"><div class="table-responsive"><table class="table table-hover data-table">
+                                        <thead><tr><th>Combination</th><th>Rate</th><th>Trend</th><th>Priority</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>K. pneumo + Mero</td><td>78%</td><td><span class="badge badge-trend badge-increasing">Increasing</span></td><td><span class="badge bg-danger">Critical</span></td></tr>
+                                            <tr><td>P. aeru + Pip-Tazo</td><td>65%</td><td><span class="badge badge-trend badge-increasing">Increasing</span></td><td><span class="badge bg-danger">Critical</span></td></tr>
+                                            <tr><td>E. coli + Cipro</td><td>58%</td><td><span class="badge badge-trend badge-stable">Stable</span></td><td><span class="badge bg-warning text-dark">High</span></td></tr>
+                                            <tr><td>Entero spp. + Vanco</td><td>22%</td><td><span class="badge badge-trend badge-increasing">Increasing</span></td><td><span class="badge bg-warning text-dark">High</span></td></tr>
+                                            <tr><td>S. aureus + Ceftria</td><td>45%</td><td><span class="badge badge-trend badge-decreasing">Decreasing</span></td><td><span class="badge bg-info text-dark">Medium</span></td></tr>
+                                        </tbody>
+                                    </table></div></div>
+                                </div>
+                                <div class="card mt-4"><div class="card-header"><i class="fas fa-shield-heart me-2"></i>Stewardship Successes</div>
+                                    <div class="card-body"><div class="list-group">
+                                        <a href="#" class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between"><h6 class="mb-1">S. aureus + Vancomycin</h6><small class="text-success fw-bold">12% (-8%)</small></div><p class="mb-1 small">Resistance decreased after protocol changes.</p><small class="text-muted">Implemented: Jan 2023</small></a>
+                                        <a href="#" class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between"><h6 class="mb-1">E. coli + Meropenem</h6><small class="text-success fw-bold">9% (Stable)</small></div><p class="mb-1 small">Low resistance maintained with restricted use.</p><small class="text-muted">Implemented: Ongoing</small></a>
+                                    </div></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 mb-4">
+                                <div class="card"><div class="card-header"><i class="fas fa-tasks-alt me-2"></i>Recommended Actions</div>
+                                    <div class="card-body">
+                                        <div class="alert alert-danger"><h6 class="alert-heading"><i class="fas fa-exclamation-circle me-2"></i>Immediate Actions</h6><ul class="mb-0 small ps-3"><li>Review meropenem use in ICU for K. pneumoniae.</li><li>Consider alternatives for P. aeruginosa in Oncology.</li></ul></div>
+                                        <div class="alert alert-warning mt-3"><h6 class="alert-heading"><i class="fas fa-clipboard-check me-2"></i>Medium-Term</h6><ul class="mb-0 small ps-3"><li>Develop guidelines for Enterococcus spp.</li><li>Educate staff on ciprofloxacin resistance in E. coli.</li></ul></div>
+                                        <div class="alert alert-info mt-3"><h6 class="alert-heading"><i class="fas fa-binoculars me-2"></i>Monitoring Priorities</h6><ul class="mb-0 small ps-3"><li>Track S. aureus vancomycin resistance.</li><li>Assess impact of meropenem restrictions.</li></ul></div>
+                                    </div>
+                                </div>
+                                <div class="card mt-4"><div class="card-header"><i class="fas fa-chart-area me-2"></i>Intervention Impact Analysis</div>
+                                    <div class="card-body"><div class="chart-container" style="height: 280px;"><canvas id="interventionChart"></canvas></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <footer class="dashboard-footer mt-4">
+                    <div class="row">
+                        <div class="col-md-6"><p><i class="fas fa-info-circle me-1"></i> Data updated hourly. Resistance rate = (Resistant Isolates / Tested Isolates) × 100</p></div>
+                        <div class="col-md-6 text-md-end"><p>AMR Dashboard v2.0 © 2023 Hospital Infection Control</p></div>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const THEME_COLORS = {
+            primaryDark: '#071A52',
+            primaryMedium: '#086972',
+            accentTeal: '#17A2B8',
+            positiveGreen: '#22bb33',
+            negativeRed: '#bb2124',
+            warningOrange: '#f0ad4e',
+            neutralGray: '#6c757d',
+            cat1: '#086972', cat2: '#17A2B8', cat3: '#5bc0de', cat4: '#6c757d', cat5: '#f0ad4e',
+            lightGrayBg: '#eef1f5',
+            white: '#ffffff'
+        };
+
+        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        Chart.defaults.plugins.title.font.size = 15;
+        Chart.defaults.plugins.title.padding = { top: 10, bottom: 15 };
+        Chart.defaults.plugins.legend.labels.boxWidth = 12;
+        Chart.defaults.plugins.legend.labels.padding = 15;
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'});
+            
+            // Trend Chart
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [
+                        { label: 'E. coli - Cipro', data: [52,54,56,55,57,58,59,60,59,58,57,58], borderColor: THEME_COLORS.negativeRed, backgroundColor: THEME_COLORS.negativeRed+'20', tension:0.3, fill:true, pointRadius:3, pointHoverRadius:5 },
+                        { label: 'K. pneumo - Mero', data: [65,67,70,72,73,75,76,77,78,77,76,78], borderColor: THEME_COLORS.warningOrange, backgroundColor: THEME_COLORS.warningOrange+'20', tension:0.3, fill:true, pointRadius:3, pointHoverRadius:5 },
+                        { label: 'S. aureus - Vanco', data: [18,17,16,15,14,13,12,13,12,12,11,12], borderColor: THEME_COLORS.positiveGreen, backgroundColor: THEME_COLORS.positiveGreen+'20', tension:0.3, fill:true, pointRadius:3, pointHoverRadius:5 }
+                    ]
+                },
+                options: { responsive:true, maintainAspectRatio:false, plugins:{title:{display:true, text:'Resistance Rate Trends (%)'}, tooltip:{mode:'index', intersect:false}, legend:{position:'bottom'}}, scales:{y:{beginAtZero:true, max:100, title:{display:true, text:'Resistance Rate (%)'}}}}
+            });
+            
+            // Current Resistance Chart
+            const currentResistanceCtx = document.getElementById('currentResistanceChart').getContext('2d');
+            new Chart(currentResistanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['E. coli', 'K. pneumo', 'S. aureus', 'P. aerugi', 'Enterococ'],
+                    datasets: [{
+                        label: 'Current Resistance Rate (%)', data: [58, 78, 12, 65, 22],
+                        backgroundColor: [THEME_COLORS.negativeRed+'B3', THEME_COLORS.negativeRed+'B3', THEME_COLORS.positiveGreen+'B3', THEME_COLORS.negativeRed+'B3', THEME_COLORS.warningOrange+'B3'],
+                        borderColor: [THEME_COLORS.negativeRed, THEME_COLORS.negativeRed, THEME_COLORS.positiveGreen, THEME_COLORS.negativeRed, THEME_COLORS.warningOrange], borderWidth: 1
+                    }]
+                },
+                options: { responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{title:{display:true, text:'Current Resistance Rates (%)'}, legend:{display:false}}, scales:{x:{beginAtZero:true, max:100, title:{display:true, text:'Resistance Rate (%)'}}}}
+            });
+            
+            // Pathogen Resistance Chart (initial)
+            const pathogenResistanceCtx = document.getElementById('pathogenResistanceChart').getContext('2d');
+            const pathogenResistanceChart = new Chart(pathogenResistanceCtx, { /* ... rest of chart config ... */
+                type: 'bar',
+                data: {
+                    labels: ['Cipro', 'Mero', 'Vanco', 'Ceftriax', 'Pip-Tazo'],
+                    datasets: [{
+                        label: 'Resistance Rate (%) for E. coli', data: [62, 8, 95, 40, 35],
+                        backgroundColor: [THEME_COLORS.negativeRed+'B3', THEME_COLORS.positiveGreen+'B3', THEME_COLORS.negativeRed+'B3', THEME_COLORS.warningOrange+'B3', THEME_COLORS.accentTeal+'B3'],
+                        borderColor: [THEME_COLORS.negativeRed, THEME_COLORS.positiveGreen, THEME_COLORS.negativeRed, THEME_COLORS.warningOrange, THEME_COLORS.accentTeal], borderWidth: 1
+                    }]
+                },
+                options: { responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{title:{display:true, text:'Resistance by Antibiotic (%)'}, legend:{display:false}}, scales:{x:{beginAtZero:true, max:100, title:{display:true, text:'Resistance Rate (%)'}}}}
+            });
+
+            // Pathogen Trend Chart (initial)
+            const pathogenTrendCtx = document.getElementById('pathogenTrendChart').getContext('2d');
+            const pathogenTrendChart = new Chart(pathogenTrendCtx, { /* ... rest of chart config ... */
+                type: 'line',
+                data: {
+                    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                    datasets: [{ label: 'E. coli - Ciprofloxacin Trend (%)', data: [52,54,56,55,57,58,59,60,59,58,57,58], borderColor: THEME_COLORS.negativeRed, backgroundColor: THEME_COLORS.negativeRed+'20', tension:0.3, fill:true, pointRadius:3, pointHoverRadius:5 }]
+                },
+                options: { responsive:true, maintainAspectRatio:false, plugins:{title:{display:true, text:'Historical Trend (%)'}, legend:{position:'bottom'}}, scales:{y:{beginAtZero:true, max:100, title:{display:true, text:'Resistance Rate (%)'}}}}
+            });
+
+            // Ward Resistance Chart
+            const wardResistanceCtx = document.getElementById('wardResistanceChart').getContext('2d');
+            new Chart(wardResistanceCtx, { /* ... rest of chart config ... */
+                type: 'bar',
+                data: {
+                    labels: ['ICU', 'Medical', 'Surgical', 'Pediatrics', 'Oncology'],
+                    datasets: [{
+                        label: 'Average Resistance Rate (%)', data: [48, 32, 28, 25, 41],
+                        backgroundColor: [THEME_COLORS.negativeRed+'B3', THEME_COLORS.warningOrange+'B3', THEME_COLORS.positiveGreen+'B3', THEME_COLORS.positiveGreen+'B3', THEME_COLORS.negativeRed+'B3'],
+                        borderColor: [THEME_COLORS.negativeRed, THEME_COLORS.warningOrange, THEME_COLORS.positiveGreen, THEME_COLORS.positiveGreen, THEME_COLORS.negativeRed], borderWidth:1
+                    }]
+                },
+                options: { responsive:true, maintainAspectRatio:false, plugins:{title:{display:true, text:'Avg. Resistance by Ward (%)'}, legend:{display:false}}, scales:{y:{beginAtZero:true, max:100, title:{display:true, text:'Resistance Rate (%)'}}}}
+            });
+
+            // Ward Distribution Chart
+            const wardDistributionCtx = document.getElementById('wardDistributionChart').getContext('2d');
+            new Chart(wardDistributionCtx, { /* ... rest of chart config ... */
+                type: 'doughnut',
+                data: {
+                    labels: ['ICU', 'Medical', 'Surgical', 'Pediatrics', 'Oncology'],
+                    datasets: [{
+                        label: 'Total Tests', data: [1245, 987, 856, 723, 476],
+                        backgroundColor: [THEME_COLORS.cat1, THEME_COLORS.cat2, THEME_COLORS.cat3, THEME_COLORS.cat4, THEME_COLORS.cat5], hoverOffset: 8, borderWidth: 2, borderColor: THEME_COLORS.white
+                    }]
+                },
+                options: { responsive:true, maintainAspectRatio:false, plugins:{title:{display:true, text:'Distribution of Tests by Ward'}, legend:{position:'right'}}}
+            });
+
+            // Intervention Impact Analysis Chart
+            const interventionCtx = document.getElementById('interventionChart').getContext('2d');
+            new Chart(interventionCtx, { /* ... rest of chart config ... */
+                type: 'line',
+                data: {
+                    labels: ['Q4 22','Q1 23','Q2 23','Q3 23','Q4 23','Q1 24'],
+                    datasets: [
+                        { label: 'K. pneumo - Mero Resist (%) Post-Intervention', data: [70,72,75,68,65,62], borderColor: THEME_COLORS.positiveGreen, backgroundColor: THEME_COLORS.positiveGreen+'20', tension:0.2, fill:true, pointRadius:4, pointHoverRadius:6 },
+                        { label: 'Intervention Point', data: [null,null,{x:'Q2 23',y:75},null,null,null], borderColor: THEME_COLORS.negativeRed, backgroundColor: THEME_COLORS.negativeRed, pointRadius:8, pointHoverRadius:10, showLine:false, type:'scatter' }
+                    ]
+                },
+                options: { responsive:true, maintainAspectRatio:false, plugins:{title:{display:true, text:'Intervention Impact Analysis'}, legend:{position:'bottom'}, tooltip:{callbacks:{label:function(c){return c.dataset.label==='Intervention Point'?'Intervention: '+c.parsed.y+'%':c.dataset.label+': '+c.parsed.y+'%';}}}}, scales:{y:{beginAtZero:false, title:{display:true, text:'Resistance Rate (%)'}}, x:{title:{display:true, text:'Time Period'}}}}
+            });
+
+            // Filter apply button
+            document.getElementById('applyFilters').addEventListener('click', function() {
+                alert('Filters applied (simulation). Charts would update.');
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'});
+                 // Close offcanvas if open
+                const sidebarOffcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('sidebar'));
+                if (sidebarOffcanvas) {
+                    sidebarOffcanvas.hide();
+                }
+            });
+
+            // Pathogen select dropdown
+            document.getElementById('pathogenSelect').addEventListener('change', function(event) {
+                const selectedPathogen = event.target.value;
+                document.getElementById('selectedPathogenName').textContent = selectedPathogen;
+                
+                let newPData, newPTrendData, newPTrendLabel, pDesc, highestR, lowestR, commonW;
+
+                if (selectedPathogen === 'K. pneumoniae') {
+                    newPData = [30, 78, 20, 60, 70]; newPTrendData = [65,67,70,72,73,75,76,77,78,77,76,78]; newPTrendLabel = 'K. pneumo - Mero Trend (%)';
+                    pDesc = "Gram-negative, encapsulated bacterium. Often causes HAIs."; highestR = "Meropenem (78%)"; lowestR = "Cipro (30%)"; commonW = "ICU (55%)";
+                } else if (selectedPathogen === 'S. aureus') {
+                    newPData = [5, 10, 12, 90, 15]; newPTrendData = [18,17,16,15,14,13,12,13,12,12,11,12]; newPTrendLabel = 'S. aureus - Vanco Trend (%)';
+                    pDesc = "Gram-positive coccus. Common cause of skin/soft tissue infections and HAIs."; highestR = "Ceftriax (90%)"; lowestR = "Cipro (5%)"; commonW = "Surgical (38%)";
+                } else { // Default E. coli
+                    newPData = [62, 8, 95, 40, 35]; newPTrendData = [52,54,56,55,57,58,59,60,59,58,57,58]; newPTrendLabel = 'E. coli - Cipro Trend (%)';
+                    pDesc = "Gram-negative bacterium commonly found in the lower intestine."; highestR = "Vanco (95%)"; lowestR = "Mero (8%)"; commonW = "Medical (42%)";
+                }
+                
+                pathogenResistanceChart.data.datasets[0].data = newPData;
+                pathogenResistanceChart.data.datasets[0].label = `Resistance Rate (%) for ${selectedPathogen}`;
+                pathogenResistanceChart.update();
+
+                pathogenTrendChart.data.datasets[0].data = newPTrendData;
+                pathogenTrendChart.data.datasets[0].label = newPTrendLabel;
+                pathogenTrendChart.update();
+
+                document.getElementById('pathogenDescription').textContent = pDesc;
+                document.getElementById('highestResistance').textContent = highestR;
+                document.getElementById('lowestResistance').textContent = lowestR;
+                document.getElementById('commonWard').textContent = commonW;
+            });
+        });
+    </script>
+</body>
+</html>
