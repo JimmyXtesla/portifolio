@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fai's Couture | Futuristic Tailoring & Bespoke Fashion</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Floating Navigation -->
+    <nav class="floating-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span>Fai's</span>
+                <span>Couture</span>
+            </div>
+            <div class="nav-links-wrapper">
+                <div class="nav-links" id="navLinksMobile">
+                    <a href="#" class="active">Home</a>
+                    <a href="#">Collections</a>
+                    <a href="#">Bespoke</a>
+                    <a href="#">About</a>
+                    <a href="#">Atelier</a>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <a href="#" class="nav-icon" aria-label="User Account"><i class="far fa-user"></i></a>
+                <a href="#" class="nav-icon" aria-label="Wishlist"><i class="far fa-heart"></i></a>
+                <a href="#" class="nav-icon cart-icon" aria-label="Shopping Bag">
+                    <i class="fas fa-bag-shopping"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinksMobile">
+                    <div class="bar bar1"></div>
+                    <div class="bar bar2"></div>
+                    <div class="bar bar3"></div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text-container">
+                <h1 class="hero-title">
+                    <span>Redefining</span>
+                    <span>Modern Tailoring</span>
+                </h1>
+                <p class="hero-subtitle">Where precision meets avant-garde design</p>
+                <div class="hero-cta">
+                    <a href="#" class="cta-primary">Explore Collections</a>
+                    <a href="#" class="cta-secondary">Book Consultation <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="image-container">
+                <img src="480145755_17909124348088230_2560258975105024437_n.jpg" alt="Luxury tailored suit from Fai's Couture">
+            </div>
+            <div class="hero-scroll">
+                <span>Scroll</span>
+                <div class="scroll-line"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Banner -->
+    <div class="marquee">
+        <div class="marquee-content-wrapper">
+            <div class="marquee-content">
+                <span>Handcrafted Excellence</span>
+                <i class="fas fa-asterisk"></i>
+                <span>Bespoke Patterns</span>
+                <i class="fas fa-asterisk"></i>
+                <span>Sustainable Luxury</span>
+                <i class="fas fa-asterisk"></i>
+                <span>Timeless Innovation</span>
+                <i class="fas fa-asterisk"></i>
+                <!-- Duplicated for seamless loop -->
+                <span>Handcrafted Excellence</span>
+                <i class="fas fa-asterisk"></i>
+                <span>Bespoke Patterns</span>
+                <i class="fas fa-asterisk"></i>
+                <span>Sustainable Luxury</span>
+                <i class="fas fa-asterisk"></i>
+                <span>Timeless Innovation</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collections Section -->
+    <section class="collections section-padding">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Signature Collections</h2>
+                <p class="section-subtitle">Curated ensembles for the modern connoisseur</p>
+            </div>
+            
+            <div class="collection-grid">
+                <div class="collection-card">
+                    <div class="collection-image">
+                        <img src="441208006_17874810747088230_2050236713287215308_n.jpg" alt="Neo-Classic Collection piece by Fai's Couture">
+                        <div class="collection-overlay">
+                            <a href="#" class="view-button">View Collection</a>
+                        </div>
+                    </div>
+                    <div class="collection-info">
+                        <h3>Neo-Classic</h3>
+                        <p>Reimagined traditional silhouettes</p>
+                        <span class="price">From $1,200</span>
+                    </div>
+                </div>
+                
+                <div class="collection-card">
+                    <div class="collection-image">
+                        <img src="446145755_17909124348088230_2560258975105024437_n.jpg" alt="Avant-Garde Collection piece by Fai's Couture">
+                        <div class="collection-overlay">
+                            <a href="#" class="view-button">View Collection</a>
+                        </div>
+                    </div>
+                    <div class="collection-info">
+                        <h3>Avant-Garde</h3>
+                        <p>Boundary-pushing designs</p>
+                        <span class="price">From $1,800</span>
+                    </div>
+                </div>
+                
+                <div class="collection-card">
+                    <div class="collection-image">
+                        <img src="437145755_17909124348088230_2560258975105024437_n.jpg" alt="Urban Luxe Collection piece by Fai's Couture">
+                        <div class="collection-overlay">
+                            <a href="#" class="view-button">View Collection</a>
+                        </div>
+                    </div>
+                    <div class="collection-info">
+                        <h3>Urban Luxe</h3>
+                        <p>City sophistication redefined</p>
+                        <span class="price">From $950</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bespoke Experience -->
+    <section class="bespoke">
+        <div class="bespoke-image">
+            <img src="430145755_17909124348088230_2560258975105024437_n.jpg" alt="Bespoke tailoring process at Fai's Couture">
+        </div>
+        <div class="bespoke-content section-padding">
+            <div class="container-tight">
+                <h2 class="section-title">The Bespoke Experience</h2>
+                <p class="section-subtitle">Your vision, crafted to perfection</p>
+                
+                <div class="process-steps">
+                    <div class="step">
+                        <div class="step-number">01</div>
+                        <div class="step-content">
+                            <h3>Consultation</h3>
+                            <p>Personalized style assessment with our master tailors</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">02</div>
+                        <div class="step-content">
+                            <h3>Design</h3>
+                            <p>Collaborative creation of your unique pattern</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">03</div>
+                        <div class="step-content">
+                            <h3>Crafting</h3>
+                            <p>Meticulous hand construction by our artisans</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">04</div>
+                        <div class="step-content">
+                            <h3>Reveal</h3>
+                            <p>Final fitting and style perfection</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="#" class="cta-primary">Begin Your Journey</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fabric Showcase -->
+    <section class="fabrics section-padding">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Material Alchemy</h2>
+                <p class="section-subtitle">Exceptional fabrics from around the world</p>
+            </div>
+            
+            <div class="fabric-showcase">
+                <div class="fabric-item">
+                    <div class="fabric-image">
+                        <img src="480145755_17909124348088230_2560258975105024437_n.jpg" alt="Italian Super 150s Wool swatch">
+                        <div class="fabric-overlay">
+                            <h3>Italian Super 150s Wool</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fabric-item">
+                    <div class="fabric-image">
+                        <img src="download.png" alt="Japanese Heritage Silk swatch">
+                        <div class="fabric-overlay">
+                            <h3>Japanese Heritage Silk</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fabric-item">
+                    <div class="fabric-image">
+                        <img src="449869370_1140689290501186_8974857229137908330_n.jpg" alt="Egyptian Giza Cotton swatch">
+                        <div class="fabric-overlay">
+                            <h3>Egyptian Giza Cotton</h3>
+                        </div>
+                    </div>
+                </div> 
+                
+                <div class="fabric-item">
+                    <div class="fabric-image">
+                        <img src="441208006_17874810747088230_2050236713287215308_n.jpg" alt="Mongolian Cashmere Blend swatch">
+                        <div class="fabric-overlay">
+                            <h3>Mongolian Cashmere Blend</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials section-padding">
+        <div class="container">
+            <div class="testimonial-slider-wrapper">
+                <div class="testimonial-slider">
+                    <div class="testimonial active">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <p>"Fai's Couture transformed how I think about tailored clothing. The attention to detail is unlike anything I've experienced before."</p>
+                            <div class="client-info">
+                                <h4>James Wilson</h4>
+                                <span>Tech Entrepreneur</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <p>"I've never felt more confident than when wearing my bespoke suit from Fai's Couture. It's like they designed it with my personality in mind."</p>
+                            <div class="client-info">
+                                <h4>Sarah Chen</h4>
+                                <span>Creative Director</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <p>"The craftsmanship is exceptional, but what really sets Fai's Couture apart is how they make the entire process feel so personal and luxurious."</p>
+                            <div class="client-info">
+                                <h4>Michael Rodriguez</h4>
+                                <span>Finance Executive</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slider-controls">
+                <button class="slider-btn slider-prev" aria-label="Previous testimonial"><i class="fas fa-chevron-left"></i></button>
+                <div class="slider-dots">
+                    <!-- Dots will be generated by JS -->
+                </div>
+                <button class="slider-btn slider-next" aria-label="Next testimonial"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section section-padding">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Redefine Your Wardrobe?</h2>
+                <p>Schedule a private consultation with our style directors</p>
+                <a href="#" class="cta-primary">Book an Appointment</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">Fai's Couture</div>
+                    <p>Where tradition meets tomorrow's fashion</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Fai's Couture Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Fai's Couture Pinterest"><i class="fab fa-pinterest"></i></a>
+                        <a href="#" aria-label="Fai's Couture LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Explore</h3>
+                    <ul>
+                        <li><a href="#">Collections</a></li>
+                        <li><a href="#">Bespoke Services</a></li>
+                        <li><a href="#">Fabric Library</a></li>
+                        <li><a href="#">Lookbook</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">Atelier</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Client Services</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Appointments</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Visit Us</h3>
+                    <address>
+                        12 Savile Row<br>
+                        Mayfair, London W1S 3PQ<br>
+                        United Kingdom
+                    </address>
+                    <p><a href="mailto:atelier@faiscouture.com">atelier@faiscouture.com</a></p>
+                    <p><a href="tel:+442079460958">+44 20 7946 0958</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>© 2024 Fai's Couture. All rights reserved.</p>
+                <div class="legal-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Mobile Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinksWrapper = document.querySelector('.nav-links-wrapper');
+
+        if (menuToggle && navLinksWrapper) {
+            menuToggle.addEventListener('click', () => {
+                navLinksWrapper.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+                const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
+                menuToggle.setAttribute('aria-expanded', !isExpanded);
+            });
+        }
+
+        // Testimonial Slider
+        const testimonials = document.querySelectorAll('.testimonial');
+        const prevButton = document.querySelector('.slider-prev');
+        const nextButton = document.querySelector('.slider-next');
+        const dotsContainer = document.querySelector('.slider-dots');
+        let currentTestimonialIndex = 0;
+
+        if (testimonials.length > 0 && dotsContainer) { 
+            testimonials.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => showTestimonial(index));
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = dotsContainer.querySelectorAll('.dot'); 
+
+            function showTestimonial(index) {
+                testimonials.forEach(t => t.classList.remove('active'));
+                if (dots.length > 0) dots.forEach(d => d.classList.remove('active'));
+
+                testimonials[index].classList.add('active');
+                if (dots.length > 0) dots[index].classList.add('active'); 
+                currentTestimonialIndex = index;
+            }
+            
+            showTestimonial(0);
+
+            if (prevButton) {
+                prevButton.addEventListener('click', () => {
+                    let newIndex = currentTestimonialIndex - 1;
+                    if (newIndex < 0) newIndex = testimonials.length - 1;
+                    showTestimonial(newIndex);
+                });
+            }
+
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    let newIndex = currentTestimonialIndex + 1;
+                    if (newIndex >= testimonials.length) newIndex = 0;
+                    showTestimonial(newIndex);
+                });
+            }
+        }
+
+        // Floating Nav scroll effect
+        const floatingNav = document.querySelector('.floating-nav');
+        if (floatingNav) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    floatingNav.classList.add('scrolled');
+                } else {
+                    floatingNav.classList.remove('scrolled');
+                }
+            });
+        }
+    });
+    </script>
+</body>
+</html>
