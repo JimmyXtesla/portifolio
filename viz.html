@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python for Data Visualization - by Jimmy X</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --slide-bg: #161b22;
+            --text-color: #c9d1d9;
+            --heading-color: #58a6ff; /* A vibrant, accessible blue */
+            --accent-color-1: #e3b341; /* Python Yellow, slightly muted */
+            --accent-color-2: #3fb950; /* GitHub Green */
+            --border-color: #30363d;
+            --code-bg: #010409;
+            --font-family: 'Inter', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+        .presentation-container {
+            width: 95vw; height: calc(95vw * 9 / 16);
+            max-width: 1280px; max-height: 720px;
+            position: relative; background: var(--bg-color);
+            border-radius: 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            overflow: hidden; border: 1px solid var(--border-color);
+        }
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 4% 6%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: var(--slide-bg);
+            transform: translateX(100%);
+            opacity: 0;
+            transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+            pointer-events: none;
+        }
+        .slide.active { transform: translateX(0); opacity: 1; pointer-events: all; }
+        .slide.previous { transform: translateX(-100%); opacity: 0; pointer-events: none; }
+
+        .slide.active > * {
+            opacity: 0; transform: translateY(20px);
+            animation: fadeInItem 0.5s forwards;
+        }
+        .slide.active > *:nth-child(1) { animation-delay: 0.2s; }
+        .slide.active > *:nth-child(2) { animation-delay: 0.4s; }
+        .slide.active > *:nth-child(3) { animation-delay: 0.6s; }
+        .slide.active > *:nth-child(4) { animation-delay: 0.8s; }
+        @keyframes fadeInItem { to { opacity: 1; transform: translateY(0); } }
+
+        .slide h1, .slide h2, .slide h3 { color: var(--heading-color); font-weight: 700; line-height: 1.2; }
+        .slide h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            background: linear-gradient(45deg, var(--heading-color), var(--accent-color-1));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .slide h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            align-self: flex-start; text-align: left; width: 100%;
+            margin-bottom: 0.8em; padding-bottom: 0.3em;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .slide h2.module-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            text-align: center; border: none;
+            width: 100%; align-self: center;
+        }
+        .slide p, .slide li { font-size: clamp(0.9rem, 2vw, 1.2rem); line-height: 1.7; }
+        .slide .subtitle { color: #8b949e; margin-top: 0.5em; max-width: 80%; font-size: clamp(1rem, 2.5vw, 1.5rem); }
+
+        .code-layout { display: grid; grid-template-columns: 55% 40%; gap: 5%; width: 100%; height: 75%; align-items: center; text-align: left; }
+        .code-block {
+            background-color: var(--code-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; font-family: var(--font-code);
+            font-size: clamp(0.75rem, 1.5vw, 0.95rem); line-height: 1.6;
+            height: 100%; display: flex; flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .code-header {
+            padding: 0.5em 1em; background: linear-gradient(to right, #1e242c, #161b22);
+            border-bottom: 1px solid var(--border-color);
+            color: #8b949e; border-top-left-radius: 10px; border-top-right-radius: 10px;
+        }
+        .copy-btn {
+            position: absolute; top: 8px; right: 8px;
+            background: #30363d; border: 1px solid var(--border-color); color: var(--text-color);
+            padding: 4px 8px; border-radius: 5px; cursor: pointer;
+            font-size: 0.8em; transition: background 0.2s; z-index: 10;
+        }
+        .copy-btn:hover { background: var(--heading-color); color: var(--code-bg); }
+        .code-content { padding: 1.5em; overflow: auto; }
+        .code-content pre { margin: 0; }
+        .code-content .comment { color: #8b949e; font-style: italic; }
+        .code-content .keyword { color: #ff7b72; }
+        .code-content .function { color: #d2a8ff; }
+        .code-content .string { color: #a5d6ff; }
+        .code-content .number { color: #79c0ff; }
+
+        .visual-side { display: flex; justify-content: center; align-items: center; height: 100%; filter: drop-shadow(0 0 15px rgba(88, 166, 255, 0.2)); }
+        .visual-side svg { width: 100%; height: auto; max-height: 100%; overflow: visible; }
+
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; width: 100%; }
+        .info-card { background: rgba(48, 54, 61, 0.3); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5em; text-align: center; transition: all 0.3s; }
+        .info-card:hover { transform: translateY(-5px); background: var(--border-color); }
+        .info-card .icon { color: var(--accent-color-1); width: 48px; height: 48px; margin-bottom: 1em; }
+        .info-card h3 { color: var(--text-color); font-size: 1.2rem; }
+
+        .check-list { list-style: none; padding: 0; width: 100%; text-align: left; }
+        .check-list li { padding-left: 2.5em; position: relative; margin-bottom: 1em; font-size: 1.2rem; }
+        .check-list li::before { content: '✅'; color: var(--accent-color-2); position: absolute; left: 0; font-size: 1.5rem; top: -3px; }
+        .mistake-list li::before { content: '❌'; color: #ff7b72; }
+
+        .nav-controls { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; z-index: 100; }
+        .nav-btn { background: var(--border-color); color: var(--text-color); border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; transition: all 0.3s; }
+        .nav-btn:hover { background-color: var(--heading-color); color: var(--bg-color); transform: scale(1.1); }
+        .nav-btn:disabled { background-color: #0d1117; color: #30363d; cursor: not-allowed; transform: scale(1); }
+        .slide-counter { font-size: 1.2rem; font-weight: 600; color: #8b949e; width: 80px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container"></div>
+
+    <div class="nav-controls">
+        <button class="nav-btn" id="prev" title="Previous Slide (←)">&#8592;</button>
+        <div class="slide-counter" id="counter"></div>
+        <button class="nav-btn" id="next" title="Next Slide (→)">&#8594;</button>
+    </div>
+
+    <script>
+        const slideContent = [
+            // SLIDE 1: Title
+            `<h1 class="active">Choosing the Right Plot</h1><p class="subtitle">A Superb Guide with Python for Data Analytics</p><p style="margin-top:2em; font-size: 1.5rem; color: var(--accent-color-1);">Jimmy X</p>`,
+            
+            // SLIDE 2: About Me
+            `<h2>About Your Instructor</h2><div style="text-align: left; width: 80%; font-size: 1.3rem; line-height: 2;"><p><strong>Name:</strong> Jimmy X</p><p><strong>Email:</strong> jimmyxbanda@gmail.com</p><p><strong>Phone:</strong> +265 998 401 750</p><p style="margin-top: 1em; font-size: 1.1rem; color: #8b949e;">Let's connect and make data talk! My goal is to make you confident in turning raw data into powerful insights.</p></div>`,
+
+            // SLIDE 3: Agenda
+            `<h2>Today's Roadmap</h2><ul class="check-list" style="width: 80%;"><li>The "Why": Foundations of Data Visualization.</li><li>Module 1: Plotting a Single Variable.</li><li>Module 2: Uncovering Relationships Between Two Variables.</li><li>Module 3: Advanced Plots & Techniques.</li><li>Case Study: Putting It All Together.</li></ul>`,
+            
+            // MODULE: Foundations
+            `<h2 class="module-title">Module 1:<br>Foundations</h2>`,
+
+            // SLIDE 5: Why Code for Viz
+            `<h2>Why Code for Visualization?</h2><div class="info-grid"><div class="info-card"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.89,3.23l2.92,1.2L12,6,8.19,4.43,11.11,3.23M12,1,3,5V11a10.26,10.26,0,0,0,8.23,10L12,21.43,12.77,21a10.26,10.26,0,0,0,8.23-10V5ZM19,10.59,12,13.82,5,10.59V6.23L12,9.11l7-2.88Z"/></svg><h3>Total Control</h3><p>Tweak every pixel, color, and label to perfection.</p></div><div class="info-card"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M22,12A10,10,0,0,0,3.5,4.22L2.08,5.63L3.5,7.05L6.33,4.22L4.92,2.81L3.5,4.22A10,10,0,1,0,12,22V20A8,8,0,1,1,20,12H22M16,12A4,4,0,1,1,12,8A4,4,0,0,1,16,12Z"/></svg><h3>Reproducibility</h3><p>Rerun your script and get the exact same plot, every time.</p></div><div class="info-card"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11,13.5V21.5H3V13.5H11M12,12H2V22H12V12M11,2H3V12H11V2M12,1H2V13H12V1M21,2H13V8H21V2M22,1H12V9H22V1M21,10H13V22H21V10M22,9H12V23H22V9Z"/></svg><h3>Automation</h3><p>Generate hundreds of plots for different data segments with a simple loop.</p></div></div>`,
+            
+            // SLIDE 6: The Setup
+            `<h2>The Standard Setup</h2><p class="subtitle" style="text-align: center; max-width: 100%;">Almost every script will start like this.</p><div class="code-block" style="width: 80%;"><div class="code-header">setup.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Import the essentials</span>\n<span class="keyword">import</span> pandas <span class="keyword">as</span> pd\n<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns\n<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt\n\n<span class="comment"># Set a modern, clean theme</span>\nsns.<span class="function">set_theme</span>(style=<span class="string">"whitegrid"</span>)</code></pre></div></div>`,
+            
+            // SLIDE 7: Sample Dataset
+            `<h2>Our Sample Dataset: "Tips"</h2><p class="subtitle" style="text-align: center; max-width: 100%;">Seaborn comes with built-in datasets. We'll use 'tips' for our examples.</p><div class="code-block" style="width: 80%;"><div class="code-header">load_data.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Load the 'tips' dataset</span>\ndf = sns.<span class="function">load_dataset</span>(<span class="string">'tips'</span>)\n\n<span class="comment"># Preview the first 5 rows</span>\ndf.<span class="function">head</span>()</code></pre></div></div>`,
+            
+            // SLIDE 8: The Golden Rule
+            `<h2 class="module-title">Start with a Question</h2><p class="subtitle">A plot without a question is just a pretty picture. Your question determines your plot.</p>`,
+            
+            // MODULE: One Variable
+            `<h2 class="module-title">Module 2:<br>Visualizing One Variable</h2>`,
+            
+            // SLIDE 10: Histogram
+            `<h2>Distribution: Histogram</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_histogram.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Q: What is the distribution of total_bill?</span>\nsns.<span class="function">histplot</span>(\n  data=df, \n  x=<span class="string">'total_bill'</span>,\n  kde=<span class="keyword">True</span> <span class="comment">// Add a density curve</span>\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 60"><path d="M 5,55 C 20,55 20,20 45,15 C 70,10 75,55 95,55" stroke="var(--accent-color-1)" fill="none" stroke-width="1.5"/><rect x="5" y="40" width="10" height="15" fill="#58a6ff" opacity="0.7"></rect><rect x="16" y="30" width="10" height="25" fill="#58a6ff" opacity="0.7"></rect><rect x="27" y="15" width="10" height="40" fill="#58a6ff" opacity="0.7"></rect><rect x="38" y="10" width="10" height="45" fill="#58a6ff" opacity="0.7"></rect><rect x="49" y="20" width="10" height="35" fill="#58a6ff" opacity="0.7"></rect><rect x="60" y="35" width="10" height="20" fill="#58a6ff" opacity="0.7"></rect></svg></div></div>`,
+            
+            // SLIDE 11: Box Plot
+            `<h2>Distribution: Box Plot</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_boxplot.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Q: What is the summary of total_bill and
+# are there any outliers?</span>\nsns.<span class="function">boxplot</span>(\n  data=df, \n  x=<span class="string">'total_bill'</span>\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 60"><line x1="20" y1="30" x2="40" y2="30" stroke="#c9d1d9" stroke-width="1"/><rect x="40" y="20" width="40" height="20" stroke="var(--heading-color)" fill="rgba(88,166,255,0.2)" stroke-width="2"/><line x1="60" y1="20" x2="60" y2="40" stroke="var(--heading-color)" stroke-width="2"/><line x1="80" y1="30" x2="95" y2="30" stroke="#c9d1d9" stroke-width="1"/><line x1="20" y1="25" x2="20" y2="35" stroke="#c9d1d9" stroke-width="1"/><line x1="95" y1="25" x2="95" y2="35" stroke="#c9d1d9" stroke-width="1"/><circle cx="10" cy="30" r="2" fill="var(--accent-color-1)"/></svg></div></div>`,
+            
+            // SLIDE 12: Count Plot
+            `<h2>Counting Categories: Count Plot</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_countplot.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Q: How many meals were served each day?</span>\nsns.<span class="function">countplot</span>(\n  data=df, \n  y=<span class="string">'day'</span>,\n  order=df[<span class="string">'day'</span>].<span class="function">value_counts</span>().index\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 60"><rect x="5" y="5" width="90" height="15" fill="#58a6ff" opacity="0.7"/><rect x="5" y="25" width="65" height="15" fill="#58a6ff" opacity="0.7"/><rect x="5" y="45" width="40" height="15" fill="#58a6ff" opacity="0.7"/></svg></div></div>`,
+            
+            // MODULE: Two Variables
+            `<h2 class="module-title">Module 3:<br>Visualizing Two Variables</h2>`,
+            
+            // SLIDE 14: Bar Plot
+            `<h2>Comparison: Bar Plot</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_barplot.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Q: What is the average tip amount per day?</span>\nsns.<span class="function">barplot</span>(\n  data=df, \n  x=<span class="string">'day'</span>, \n  y=<span class="string">'tip'</span>\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 60"><rect x="10" y="30" width="20" height="25" fill="#58a6ff" opacity="0.7"></rect><rect x="40" y="10" width="20" height="45" fill="#58a6ff" opacity="0.7"></rect><rect x="70" y="20" width="20" height="35" fill="#58a6ff" opacity="0.7"></rect></svg></div></div>`,
+
+            // SLIDE 15: Grouped Bar Plot
+            `<h2>Sub-Comparison: Grouped Bar Plot</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_grouped_bar.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Q: How does average tip vary by day AND sex?</span>\nsns.<span class="function">barplot</span>(\n  data=df, \n  x=<span class="string">'day'</span>, \n  y=<span class="string">'tip'</span>,\n  hue=<span class="string">'sex'</span> <span class="comment">// The magic 'hue' parameter</span>\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 60"><rect x="10" y="30" width="10" height="25" fill="#58a6ff"></rect><rect x="21" y="40" width="10" height="15" fill="#e3b341"></rect><rect x="45" y="10" width="10" height="45" fill="#58a6ff"></rect><rect x="56" y="25" width="10" height="30" fill="#e3b341"></rect><rect x="80" y="20" width="10" height="35" fill="#58a6ff"></rect><rect x="91" y="35" width="10" height="20" fill="#e3b341"></rect></svg></div></div>`,
+            
+            // SLIDE 16: Scatter Plot
+            `<h2>Relationship: Scatter Plot</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_scatterplot.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Q: Is there a relationship between the
+# total_bill and the tip amount?</span>\nsns.<span class="function">scatterplot</span>(\n  data=df, \n  x=<span class="string">'total_bill'</span>, \n  y=<span class="string">'tip'</span>\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 60"><circle cx="20" cy="50" r="3" fill="var(--heading-color)"/><circle cx="30" cy="42" r="3" fill="var(--heading-color)"/><circle cx="45" cy="35" r="3" fill="var(--heading-color)"/><circle cx="55" cy="30" r="3" fill="var(--heading-color)"/><circle cx="65" cy="22" r="3" fill="var(--heading-color)"/><circle cx="80" cy="15" r="3" fill="var(--heading-color)"/></svg></div></div>`,
+
+            // SLIDE 17: Regression Plot
+            `<h2>Modeling Relationship: Regression Plot</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_regplot.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Q: Can we model the relationship between
+# total_bill and tip?</span>\nsns.<span class="function">regplot</span>(\n  data=df, \n  x=<span class="string">'total_bill'</span>, \n  y=<span class="string">'tip'</span>\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 60"><line x1="10" y1="55" x2="90" y2="10" stroke="var(--accent-color-1)" stroke-width="2"/><path d="M 10 58 L 90 13 L 90 7 L 10 52 Z" fill="var(--accent-color-1)" opacity="0.2"/><circle cx="20" cy="50" r="2.5" fill="var(--heading-color)"/><circle cx="30" cy="42" r="2.5" fill="var(--heading-color)"/><circle cx="45" cy="35" r="2.5" fill="var(--heading-color)"/><circle cx="55" cy="30" r="2.5" fill="var(--heading-color)"/><circle cx="65" cy="22" r="2.5" fill="var(--heading-color)"/><circle cx="80" cy="15" r="2.5" fill="var(--heading-color)"/></svg></div></div>`,
+            
+            // SLIDE 18: Bubble Chart
+            `<h2>Adding Dimension: Bubble Chart</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_bubble.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Q: Relationship between bill and tip,
+# colored by day, sized by party size?</span>\nsns.<span class="function">scatterplot</span>(\n  data=df, \n  x=<span class="string">'total_bill'</span>, \n  y=<span class="string">'tip'</span>,\n  hue=<span class="string">'day'</span>,   <span class="comment">// 3rd dim: color</span>\n  size=<span class="string">'size'</span>, <span class="comment">// 4th dim: size</span>\n  sizes=(<span class="number">20</span>, <span class="number">200</span>), alpha=<span class="number">0.7</span>\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 60"><circle cx="20" cy="50" r="4" fill="var(--heading-color)"/><circle cx="30" cy="42" r="8" fill="var(--accent-color-2)"/><circle cx="45" cy="35" r="5" fill="var(--accent-color-1)"/><circle cx="65" cy="22" r="10" fill="var(--heading-color)"/><circle cx="80" cy="15" r="6" fill="var(--accent-color-2)"/></svg></div></div>`,
+            
+            // MODULE: Advanced
+            `<h2 class="module-title">Module 4:<br>Advanced Techniques</h2>`,
+            
+            // SLIDE 20: Pair Plot
+            `<h2>All Relationships: Pair Plot</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_pairplot.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Goal: Get a fast overview of all
+# pairwise relationships in your data.</span>\nsns.<span class="function">pairplot</span>(\n  df,\n  hue=<span class="string">'sex'</span> <span class="comment">// Optional</span>\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 100"><rect x="5" y="5" width="40" height="40" stroke="#30363d" fill="none"/><path d="M 10,40 C 15,40 15,20 25,20 C 35,20 35,40 40,40" stroke="var(--heading-color)" fill="none"/><rect x="55" y="5" width="40" height="40" stroke="#30363d" fill="none"/><circle cx="65" cy="35" r="2" fill="#58a6ff"/><circle cx="75" cy="25" r="2" fill="#58a6ff"/><circle cx="85" cy="15" r="2" fill="#58a6ff"/><rect x="5" y="55" width="40" height="40" stroke="#30363d" fill="none"/><circle cx="15" cy="65" r="2" fill="#58a6ff"/><circle cx="25" cy="75" r="2" fill="#58a6ff"/><circle cx="35" cy="85" r="2" fill="#58a6ff"/><rect x="55" y="55" width="40" height="40" stroke="#30363d" fill="none"/><path d="M 60,90 C 65,90 65,70 75,70 C 85,70 85,90 90,90" stroke="var(--heading-color)" fill="none"/></svg></div></div>`,
+            
+            // SLIDE 21: Heatmap
+            `<h2>Correlations: Heatmap</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_heatmap.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Goal: Visualize a correlation matrix.</span>\ncorr_matrix = df.corr()\nsns.<span class="function">heatmap</span>(\n  corr_matrix, \n  annot=<span class="keyword">True</span>, <span class="comment">// Show numbers</span>\n  cmap=<span class="string">'vlag'</span>, <span class="comment">// Diverging colormap</span>\n  center=<span class="number">0</span>\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 100"><rect x="5" y="5" width="28" height="28" fill="#ff7b72"/><rect x="36" y="5" width="28" height="28" fill="#f0f6fc"/><rect x="67" y="5" width="28" height="28" fill="#a5d6ff"/><rect x="5" y="36" width="28" height="28" fill="#f0f6fc"/><rect x="36" y="36" width="28" height="28" fill="#ff7b72"/><rect x="67" y="36" width="28" height="28" fill="#f0f6fc"/><rect x="5" y="67" width="28" height="28" fill="#a5d6ff"/><rect x="36" y="67" width="28" height="28" fill="#f0f6fc"/><rect x="67" y="67" width="28" height="28" fill="#ff7b72"/></svg></div></div>`,
+            
+            // SLIDE 22: Subplots
+            `<h2>Layouts: Creating Subplots</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_subplots.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Create a 1x2 grid of plots</span>\nfig, axes = plt.<span class="function">subplots</span>(nrows=<span class="number">1</span>, ncols=<span class="number">2</span>, figsize=(<span class="number">12</span>, <span class="number">5</span>))\n\n<span class="comment"># Plot on the first axis</span>\nsns.<span class="function">histplot</span>(data=df, x=<span class="string">'total_bill'</span>, ax=axes[<span class="number">0</span>])\naxes[<span class="number">0</span>].<span class="function">set_title</span>(<span class="string">'Bill Distribution'</span>)\n\n<span class="comment"># Plot on the second axis</span>\nsns.<span class="function">histplot</span>(data=df, x=<span class="string">'tip'</span>, ax=axes[<span class="number">1</span>])\naxes[<span class="number">1</span>].<span class="function">set_title</span>(<span class="string">'Tip Distribution'</span>)\n\nplt.<span class="function">tight_layout</span>()\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 50"><rect x="5" y="5" width="40" height="40" stroke="#30363d" fill="none"/><path d="M 10,40 C 15,40 15,20 25,20 C 35,20 35,40 40,40" stroke="var(--heading-color)" fill="none"/><rect x="55" y="5" width="40" height="40" stroke="#30363d" fill="none"/><path d="M 60,40 C 65,40 65,25 75,25 C 85,25 85,40 90,40" stroke="var(--accent-color-1)" fill="none"/></svg></div></div>`,
+
+            // SLIDE 23: Palettes
+            `<h2>Design: Choosing Palettes</h2><p class="subtitle" style="max-width:100%; text-align:left;">Use color with purpose. Pass the <code>palette</code> argument to most seaborn plots.</p><ul class="check-list" style="width: 90%;"><li><strong>Sequential:</strong> For numbers that go from low to high. Ex: <code>palette='viridis'</code>, <code>'mako'</code>.</li><li><strong>Diverging:</strong> For numbers that have a meaningful center (like 0). Ex: <code>palette='coolwarm'</code>, <code>'vlag'</code>.</li><li><strong>Qualitative:</strong> For distinct categories. Ex: <code>palette='tab10'</code>, <code>'deep'</code>.</li></ul>`,
+            
+            // SLIDE 24: Annotations
+            `<h2>Storytelling: with Annotations</h2><div class="code-layout"><div class="code-block"><div class="code-header">plot_annotate.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code><span class="comment"># Use annotations to point out key insights.</span>\nsns.<span class="function">lineplot</span>(data=df, x=<span class="string">'date'</span>, y=<span class="string">'sales'</span>)\n\n<span class="comment"># Add an annotation</span>\nplt.<span class="function">annotate</span>(\n  <span class="string">'New Product Launch!'</span>,\n  xy=(date_of_launch, sales_on_date), <span class="comment">// Point to data</span>\n  xytext=(x_pos, y_pos), <span class="comment">// Position of text</span>\n  arrowprops=dict(facecolor=<span class="string">'black'</span>, shrink=<span class="number">0.05</span>),\n)\nplt.<span class="function">show</span>()</code></pre></div></div><div class="visual-side"><svg viewBox="0 0 100 60"><polyline fill="none" stroke="var(--heading-color)" stroke-width="2.5" points="10,45 25,30 40,35 55,15 70,25 85,10"/><circle cx="55" cy="15" r="3" fill="var(--accent-color-1)"/><text x="60" y="10" font-size="5" fill="var(--text-color)">Peak Sales!</text></svg></div></div>`,
+            
+            // MODULE: Case Study
+            `<h2 class="module-title">Case Study:<br>Analyzing "Tips"</h2>`,
+
+            // SLIDE 26: Case Study Questions
+            `<h2>The Questions</h2><p class="subtitle" style="text-align:left; max-width:100%;">Let's use our new skills to answer some business questions about the restaurant.</p><ul class="check-list" style="font-size: 1.4rem;"><li>Do smokers tip more or less than non-smokers?</li><li>Does the relationship between the total bill and tip differ for smokers vs. non-smokers?</li><li>Which day brings in the most revenue?</li></ul>`,
+            
+            // SLIDE 27: Case Study Answers
+            `<h2>The Answers in Code</h2><div class="code-block" style="width: 90%; height: 85%;"><div class="code-header">case_study.py</div><button class="copy-btn" title="Copy code">Copy</button><div class="code-content"><pre><code>fig, axes = plt.<span class="function">subplots</span>(<span class="number">1</span>, <span class="number">3</span>, figsize=(<span class="number">18</span>, <span class="number">6</span>))\n\n<span class="comment"># Q1: Do smokers tip more?</span>\nsns.<span class="function">boxplot</span>(data=df, x=<span class="string">'smoker'</span>, y=<span class="string">'tip'</span>, ax=axes[<span class="number">0</span>])\naxes[<span class="number">0</span>].<span class="function">set_title</span>(<span class="string">'Tip Amount by Smoker Status'</span>)\n\n<span class="comment"># Q2: Bill vs. Tip relationship by smoker status</span>\nsns.<span class="function">scatterplot</span>(data=df, x=<span class="string">'total_bill'</span>, y=<span class="string">'tip'</span>, hue=<span class="string">'smoker'</span>, ax=axes[<span class="number">1</span>])\naxes[<span class="number">1</span>].<span class="function">set_title</span>(<span class="string">'Bill vs. Tip by Smoker Status'</span>)\n\n<span class="comment"># Q3: Which day has highest revenue? (Use a bar plot on total_bill)</span>\nsns.<span class="function">barplot</span>(data=df, x=<span class="string">'day'</span>, y=<span class="string">'total_bill'</span>, estimator=sum, errorbar=<span class="keyword">None</span>, ax=axes[<span class="number">2</span>])\naxes[<span class="number">2</span>].<span class="function">set_title</span>(<span class="string">'Total Revenue by Day'</span>)\n\nplt.<span class="function">tight_layout</span>()\nplt.<span class="function">show</span>()</code></pre></div></div>`,
+            
+            // SLIDE 28: Summary
+            `<h2>Your Superb Workflow</h2><ol class="check-list" style="font-size: 1.3rem; list-style-type: decimal; --color: var(--accent-color-1);"><li><strong>Load & Understand Data</strong> (<code>pd.read_csv</code>, <code>df.info()</code>).</li><li><strong>Form a Question</strong> ("I want to see...").</li><li><strong>Choose a Plot</strong> (Based on the question & data types).</li><li><strong>Code the Plot</strong> (<code>seaborn</code> is your best friend).</li><li><strong>Refine & Label</strong> (<code>matplotlib</code> for titles, labels, size).</li><li><strong>Interpret & Share!</strong></li></ol>`,
+            
+            // SLIDE 29: Final Tips
+            `<h2>Final Pro Tips</h2><ul class="check-list"><li><strong>Keep it Simple:</strong> The best plot is often the simplest one that answers the question.</li><li><strong>Know Your Audience:</strong> A plot for a technical report is different from a plot for a business presentation.</li><li><strong>Iterate:</strong> Your first plot is rarely your last. Try different plots and styles to find the best insight.</li></ul>`,
+
+            // SLIDE 30: Thank You
+            `<h1 style="margin-bottom: 0.2em;">Thank You!</h1><h2 class="module-title" style="border: none; margin-bottom: 1em;">Questions?</h2><div style="margin-top: 1em; line-height: 2; font-size: 1.3rem;"><p><strong>Jimmy X</strong></p><p style="color: #8b949e;">jimmyxbanda@gmail.com</p><p style="color: #8b949e;">+265 998 401 750</p></div>`
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.presentation-container');
+            const prevBtn = document.getElementById('prev');
+            const nextBtn = document.getElementById('next');
+            const counter = document.getElementById('counter');
+            
+            slideContent.forEach(content => {
+                const slide = document.createElement('section');
+                slide.className = 'slide';
+                slide.innerHTML = content;
+                container.appendChild(slide);
+            });
+
+            const slides = document.querySelectorAll('.slide');
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            function updateSlideClasses() {
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active', 'previous');
+                    if (i === currentSlide) {
+                        slide.classList.add('active');
+                    } else if (i < currentSlide) {
+                        slide.classList.add('previous');
+                    }
+                });
+                updateControls();
+            }
+
+            function updateControls() {
+                counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlideClasses();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlideClasses();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextBtn.click();
+                else if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevBtn.click();
+            });
+            
+            container.addEventListener('click', function(e) {
+                if (e.target.classList.contains('copy-btn')) {
+                    const codeBlock = e.target.closest('.code-block');
+                    const code = codeBlock.querySelector('pre code').innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        e.target.textContent = 'Copied!';
+                        setTimeout(() => { e.target.textContent = 'Copy'; }, 2000);
+                    });
+                }
+            });
+
+            updateSlideClasses();
+        });
+    </script>
+</body>
+</html>
