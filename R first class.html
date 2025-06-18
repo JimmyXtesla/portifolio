@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R for Data Science - Class 1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <style>
+        /* --- General Setup & Variables --- */
+        :root {
+            --teal: #008080;
+            --coral: #FF7F50;
+            --dark-bg: #2c3e50;
+            --light-text: #ecf0f1;
+            --light-bg: #fdfdfd;
+            --code-bg: #1e2227;
+            --heading-font: 'Montserrat', sans-serif;
+            --body-font: 'Open Sans', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--body-font);
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            overflow: hidden; /* Prevents scrollbars from appearing */
+        }
+
+        /* --- Slideshow Container & Slides --- */
+        .slideshow-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 40px 80px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .slide.active-slide {
+            display: flex;
+            opacity: 1;
+            z-index: 1;
+        }
+
+        /* --- Slide Content Styling --- */
+        .slide h1, .slide h2, .slide h3 {
+            font-family: var(--heading-font);
+            margin-bottom: 20px;
+        }
+        
+        .slide h1 {
+            font-size: 3.5rem;
+            color: var(--coral);
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            color: var(--teal);
+            font-weight: 400;
+        }
+        
+        .slide h3 {
+             font-size: 1.8rem;
+        }
+        
+        .slide h4 {
+            font-size: 1.2rem;
+            color: #bdc3c7;
+            margin-top: 20px;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+
+        .slide ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .slide ul li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .slide ul li .fa-solid {
+            color: var(--coral);
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+
+        /* --- Code Block Styling --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--light-text);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            max-width: 90%;
+            overflow-x: auto;
+            margin-top: 20px;
+            border-left: 5px solid var(--teal);
+        }
+        
+        code .comment { color: #6a9955; }
+        code .operator { color: var(--coral); }
+        code .string { color: #ce9178; }
+        code .number { color: #b5cea8; }
+        code .function { color: #dcdcaa; }
+        code .variable { color: #9cdcfe; }
+
+        /* --- Custom Visualizations --- */
+        .plot-image {
+            max-width: 70%;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .rstudio-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 300px 200px;
+            gap: 10px;
+            width: 80%;
+            max-width: 900px;
+            margin-top: 20px;
+        }
+        .rstudio-pane {
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            padding: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .rstudio-pane span {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--coral);
+            margin-bottom: 10px;
+        }
+
+        .data-frame-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 1.2rem;
+            min-width: 400px;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+            background-color: var(--light-bg);
+            color: var(--dark-bg);
+        }
+        .data-frame-table thead tr {
+            background-color: var(--teal);
+            color: #ffffff;
+            text-align: left;
+        }
+        .data-frame-table th, .data-frame-table td {
+            padding: 12px 15px;
+        }
+        .data-frame-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+        .data-frame-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        .data-frame-table tbody tr:last-of-type {
+            border-bottom: 2px solid var(--teal);
+        }
+        
+        /* --- Navigation --- */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.3s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            z-index: 10;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+        
+        .prev {
+            left: 0;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            color: #7f8c8d;
+            z-index: 10;
+        }
+
+        /* --- Helper Classes --- */
+        .icon-large {
+            font-size: 6rem;
+            color: var(--teal);
+            margin-bottom: 30px;
+        }
+        .text-coral { color: var(--coral); }
+        .text-teal { color: var(--teal); }
+        .highlight {
+            background: linear-gradient(to top, var(--coral) 40%, transparent 40%);
+            padding: 0 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slideshow-container">
+
+        <!-- Slide 1: Title -->
+        <div class="slide active-slide">
+            <i class="fa-solid fa-rocket icon-large"></i>
+            <h1>Welcome to R for Data Science!</h1>
+            <h2>Your Adventure Begins Today!</h2>
+            <h4>Jimmy X</h4>
+        </div>
+
+        <!-- Slide 2: Agenda -->
+        <div class="slide">
+            <h2>What's on the Menu Today? 🚀</h2>
+            <ul>
+                <li><i class="fa-solid fa-circle-question"></i>Why R? (And why it's awesome!)</li>
+                <li><i class="fa-solid fa-desktop"></i>Your New Playground: A quick tour of RStudio.</li>
+                <li><i class="fa-solid fa-calculator"></i>R as a Super-Calculator: Let's do some math!</li>
+                <li><i class="fa-solid fa-box-archive"></i>Storing Your Treasure: Meet Variables!</li>
+                <li><i class="fa-solid fa-cubes"></i>The Building Blocks of Data: R's Data Structures.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Why R? -->
+        <div class="slide">
+            <h2>The "WOW" Moment: Why Learn R?</h2>
+            <p>R lets you go from raw data to powerful stories. You'll learn to make beautiful visuals like this:</p>
+            <img src="https://ggplot2.tidyverse.org/reference/geom_bar-1.png" alt="A beautiful bar chart made with ggplot2" class="plot-image">
+            <pre><code class="language-r"><span class="comment"># Don't worry about this code now! Just look at what's possible...</span>
+<span class="function">library</span>(ggplot2)
+<span class="function">ggplot</span>(diamonds, <span class="function">aes</span>(x = cut, fill = clarity)) +
+  <span class="function">geom_bar</span>(position = <span class="string">"dodge"</span>)</code></pre>
+        </div>
+
+        <!-- Slide 4: RStudio -->
+        <div class="slide">
+            <h2>Your Playground: RStudio</h2>
+            <p>This is your command center for all things data!</p>
+            <div class="rstudio-layout">
+                <div class="rstudio-pane"><span>①</span> Source (Script)</div>
+                <div class="rstudio-pane"><span>③</span> Environment</div>
+                <div class="rstudio-pane"><span>②</span> Console (Live R)</div>
+                <div class="rstudio-pane"><span>④</span> Files / Plots</div>
+            </div>
+        </div>
+        
+        <!-- Slide 5: R as Calculator -->
+        <div class="slide">
+            <i class="fa-solid fa-calculator icon-large"></i>
+            <h2>Let's Start Easy: R is a Great Calculator!</h2>
+             <p>Type directly into the <span class="text-teal">Console</span> and press Enter.</p>
+            <pre><code class="language-r"><span class="comment"># Addition</span>
+<span class="number">2</span> <span class="operator">+</span> <span class="number">5</span>
+[1] 7
+
+<span class="comment"># R knows the order of operations!</span>
+<span class="number">10</span> <span class="operator">/</span> <span class="number">2</span> <span class="operator">*</span> <span class="number">3</span>
+[1] 15</code></pre>
+            <h3>You've just written your first R code! 🎉</h3>
+        </div>
+
+        <!-- Slide 6: Variables -->
+        <div class="slide">
+            <i class="fa-solid fa-box-archive icon-large"></i>
+            <h2>Storing Your Treasure: Variables!</h2>
+            <p>Think of a variable as a labeled box. The "put in the box" arrow in R is <span class="highlight text-dark-bg">&lt;-</span></p>
+            <pre><code class="language-r"><span class="comment"># Put the number 30 into a box called 'my_age'</span>
+<span class="variable">my_age</span> <span class="operator">&lt;-</span> <span class="number">30</span>
+
+<span class="comment"># Text (or "characters") always needs quotes!</span>
+<span class="variable">wizard_name</span> <span class="operator">&lt;-</span> <span class="string">"Gandalf"</span></code></pre>
+            <h4>Now, check your <span class="text-teal">Environment</span> pane in RStudio!</h4>
+        </div>
+
+        <!-- Slide 7: Using Variables -->
+        <div class="slide">
+            <h2>Playing with Your Variables</h2>
+            <p>Once a value is stored, you can use the variable's name to access it.</p>
+            <pre><code class="language-r"><span class="comment"># See what's inside the 'my_age' box</span>
+<span class="variable">my_age</span>
+[1] 30
+
+<span class="comment"># Do math with it!</span>
+<span class="variable">my_age</span> <span class="operator">+</span> <span class="number">5</span>
+[1] 35</code></pre>
+             <p>Pro-Tip: Read <span class="text-coral">`<-`</span> as <span class="highlight text-dark-bg">"gets"</span>. So, `my_age <- 30` is "my_age gets 30".</p>
+        </div>
+        
+        <!-- Slide 8: Data Structures Intro -->
+        <div class="slide">
+            <i class="fa-solid fa-cubes icon-large"></i>
+            <h2>R's Building Blocks: Data Structures</h2>
+            <p>Data comes in different shapes and sizes. R has special containers for it.</p>
+            <ul>
+                <li><i class="fa-solid fa-train"></i><strong>Vector:</strong> A train where every car holds the same type of item.</li>
+                <li><i class="fa-solid fa-backpack"></i><strong>List:</strong> A backpack where you can throw anything in!</li>
+                <li><i class="fa-solid fa-table-cells"></i><strong>Data Frame:</strong> The superstar! A perfect grid, like a spreadsheet.</li>
+            </ul>
+        </div>
+        
+        <!-- Slide 9: Vector -->
+        <div class="slide">
+            <h2>The Vector 🚂 A One-Way Street</h2>
+            <p>A vector is a sequence of elements of the <span class="highlight text-dark-bg">same type</span>. Create one with `c()` (for combine).</p>
+            <pre><code class="language-r"><span class="comment"># A numeric vector of pet ages</span>
+<span class="variable">pet_ages</span> <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">8</span>)
+<span class="variable">pet_ages</span>
+[1] 3 5 2 8
+
+<span class="comment"># A character vector of pet names</span>
+<span class="variable">pet_names</span> <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"Fido"</span>, <span class="string">"Whiskers"</span>, <span class="string">"Chirpy"</span>, <span class="string">"Spike"</span>)
+<span class="variable">pet_names</span>
+[1] "Fido" "Whiskers" "Chirpy" "Spike"</code></pre>
+        </div>
+
+        <!-- Slide 10: Data Frame -->
+        <div class="slide">
+            <h2>The Data Frame 📊 The Superstar!</h2>
+            <p>This is the most important data structure! It's a table where <span class="text-coral">columns are variables</span> and <span class="text-coral">rows are observations</span>.</p>
+             <pre><code class="language-r"><span class="comment"># Our vectors from before</span>
+<span class="variable">pet_names</span> <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="string">"Fido"</span>, <span class="string">"Whiskers"</span>, <span class="string">"Chirpy"</span>, <span class="string">"Spike"</span>)
+<span class="variable">pet_ages</span> <span class="operator">&lt;-</span> <span class="function">c</span>(<span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">8</span>)
+<span class="variable">is_cute</span> <span class="operator">&lt;-</span> <span class="function">c</span>(TRUE, TRUE, TRUE, FALSE)
+
+<span class="comment"># Let's build the data frame!</span>
+<span class="variable">pets_df</span> <span class="operator">&lt;-</span> <span class="function">data.frame</span>(name = <span class="variable">pet_names</span>, 
+                      age = <span class="variable">pet_ages</span>, 
+                      cute = <span class="variable">is_cute</span>)
+</code></pre>
+        </div>
+
+        <!-- Slide 11: Data Frame Output -->
+        <div class="slide">
+             <h2>Our First Data Frame!</h2>
+             <p>Running that code gives you this beautiful table in R:</p>
+             <table class="data-frame-table">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>age</th>
+                        <th>cute</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Fido</td><td>3</td><td>TRUE</td></tr>
+                    <tr><td>Whiskers</td><td>5</td><td>TRUE</td></tr>
+                    <tr><td>Chirpy</td><td>2</td><td>TRUE</td></tr>
+                    <tr><td>Spike</td><td>8</td><td>FALSE</td></tr>
+                </tbody>
+             </table>
+             <h3>Congratulations! You've made your first dataset! 🥳</h3>
+        </div>
+
+        <!-- Slide 12: Exploring Data Frame -->
+        <div class="slide">
+             <h2>Exploring Your Data Frame</h2>
+             <p>Let's peek inside our data with a few handy functions.</p>
+             <pre><code class="language-r"><span class="comment"># See the first few rows</span>
+<span class="function">head</span>(<span class="variable">pets_df</span>)
+
+<span class="comment"># Get the structure of the data - what's inside?</span>
+<span class="function">str</span>(<span class="variable">pets_df</span>)
+
+<span class="comment"># Access a single column with $</span>
+<span class="variable">pets_df</span>$<span class="variable">name</span>
+[1] "Fido" "Whiskers" "Chirpy" "Spike"
+
+<span class="comment"># Let's find the average age!</span>
+<span class="function">mean</span>(<span class="variable">pets_df</span>$<span class="variable">age</span>)
+[1] 4.5
+             </code></pre>
+        </div>
+        
+        <!-- Slide 13: Recap -->
+        <div class="slide">
+            <h2>You Did It! 🏆 Recap</h2>
+            <ul>
+                <li><i class="fa-solid fa-star"></i>R is a powerful tool for math and analysis.</li>
+                <li><i class="fa-solid fa-star"></i>We use <span class="text-coral">`<-`</span> to assign values to <span class="text-teal">variables</span>.</li>
+                <li><i class="fa-solid fa-star"></i><span class="text-teal">Vectors</span> `c()` hold a sequence of the same data type.</li>
+                <li><i class="fa-solid fa-star"></i><span class="text-teal">Data Frames</span> `data.frame()` are tables and are your new best friend!</li>
+                <li><i class="fa-solid fa-star"></i>Explore data with `head()`, `str()`, and `$`.</li>
+            </ul>
+        </div>
+        
+        <!-- Slide 14: Next Time -->
+        <div class="slide">
+            <h2>Coming Up Next Time...</h2>
+            <p>We've built our data. Next time, we bring it to life with <span class="text-teal">ggplot2</span>, the world's best data visualization library.</p>
+            <img src="https://r-graphics.org/recipe-bar-graph-basic_files/figure-html/unnamed-chunk-4-1.png" alt="A colorful bar chart of pet ages" class="plot-image" style="max-width: 50%;">
+            <h3>Get ready to turn your tables into stories!</h3>
+        </div>
+        
+        <!-- Slide 15: Homework -->
+        <div class="slide">
+             <i class="fa-solid fa-scroll icon-large"></i>
+             <h2>Your First Quest! (Homework)</h2>
+             <p style="text-align: left; max-width: 700px;">
+                <strong>Your Mission:</strong> Create your very own data frame! <br>
+                1. Choose a topic you love (movies, songs, games, etc.).<br>
+                2. Create 3 vectors about that topic.<br>
+                3. Combine them into a `data.frame()` called `my_faves_df`.<br>
+                4. Explore it with `head()` and `str()`!
+             </p>
+             <h4>The goal is to practice and have fun!</h4>
+        </div>
+        
+        <!-- Slide 16: Q&A -->
+        <div class="slide">
+            <h1>Questions?</h1>
+            <h2>You're on your way to becoming a data wizard!</h2>
+            <div style="margin-top: 40px; font-size: 1.2rem;">
+                <p>Jimmy X</p>
+                <p><i class="fa-solid fa-envelope text-coral"></i> <a href="mailto:jimmyxbanda@gmail.com" style="color: var(--light-text);">jimmyxbanda@gmail.com</a></p>
+                <p><i class="fa-solid fa-phone text-coral"></i> <a href="tel:+265998401750" style="color: var(--light-text);">+265 998 401 750</a></p>
+            </div>
+        </div>
+
+        <!-- Navigation Arrows and Number -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        <div class="slide-number"></div>
+
+    </div>
+
+    <script>
+        let slideIndex = 1;
+        const slides = document.getElementsByClassName("slide");
+        const slideNumberText = document.querySelector(".slide-number");
+
+        function showSlides(n) {
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active-slide");
+            }
+            
+            slides[slideIndex - 1].classList.add("active-slide");
+            slideNumberText.textContent = `${slideIndex} / ${slides.length}`;
+        }
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowRight') {
+                plusSlides(1);
+            } else if (e.key === 'ArrowLeft') {
+                plusSlides(-1);
+            }
+        });
+
+        // Initial call
+        showSlides(slideIndex);
+    </script>
+</body>
+</html>
