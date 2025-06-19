@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solidity Designs Labs - Crafting Exceptional Digital Experiences</title>
+    
+    <!-- ICONS & FONTS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- PREMIUM SAAS/STUDIO THEME (STRIPE/LINEAR INSPIRED) --- */
+        
+        :root {
+            --bg-color: #f7f8fa;
+            --bg-secondary: #ffffff;
+            --bg-subtle: #fcfdff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555;
+            --border-color: #e6e6e6;
+            --accent-gradient: linear-gradient(135deg, #6A11CB 0%, #2575FC 100%);
+            --border-radius-lg: 1.5rem;
+            --border-radius-md: 0.75rem;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* 2. HEADER */
+        header { padding: 20px 0; background-color: rgba(247, 248, 250, 0.8); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; font-weight: 700; }
+        .nav-links { display: flex; list-style: none; align-items: center; gap: 32px; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s ease; }
+        .nav-links a:hover { color: var(--text-primary); }
+        
+        /* 3. BUTTONS */
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: var(--border-radius-md); text-decoration: none; font-weight: 600; font-size: 16px; transition: all 0.2s ease-in-out; border: 1px solid transparent; }
+        .btn-primary { background: var(--text-primary); color: white; }
+        .btn-primary:hover { background: #333; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        /* 4. HERO SECTION */
+        .hero { text-align: center; padding: 120px 0; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 1000px; height: 1000px; background-image: radial-gradient(circle, rgba(37, 117, 252, 0.08) 0%, transparent 60%); z-index: -1; }
+        .hero-content h1 { font-size: clamp(3.2rem, 7vw, 5rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.04em; max-width: 950px; margin: 0 auto 24px; }
+        .hero-content h1 .gradient-text { background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-content p { font-size: 1.25rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 40px; }
+        .hero-showcase { margin-top: 80px; position: relative; }
+        .hero-showcase-inner {
+            padding: 24px; border-radius: var(--border-radius-lg); background: var(--bg-secondary);
+            border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .hero-showcase h4 { font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.9rem; }
+        .hero-showcase pre { background-color: #f9faff !important; border-radius: var(--border-radius-md); padding: 24px; font-size: 14px; }
+
+        /* 5. TRUST/CLIENTS SECTION */
+        .clients { padding: 40px 0 100px; }
+        .clients-container { text-align: center; }
+        .clients-container span { font-weight: 600; color: var(--text-secondary); margin-bottom: 32px; display: block; letter-spacing: 0.05em; font-size: 0.9rem; }
+        .clients-logos { display: flex; justify-content: center; align-items: center; gap: 64px; flex-wrap: wrap; }
+        .clients-logos i { font-size: 2.2rem; color: #ccc; transition: color 0.3s ease; }
+        .clients-logos i:hover { color: #999; }
+        
+        /* 6. PROCESS SECTION (NEW) */
+        .process { padding: 100px 0; }
+        .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+        .process-step { text-align: center; }
+        .process-step .step-number { font-size: 1.25rem; font-weight: 700; color: #2575FC; width: 48px; height: 48px; line-height: 48px; border-radius: 50%; background-color: rgba(37, 117, 252, 0.1); margin: 0 auto 24px; }
+        .process-step h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; }
+        .process-step p { color: var(--text-secondary); font-size: 1rem; }
+
+        /* 7. FEATURES BENTO GRID (NEW) */
+        .features { padding: 100px 0; background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
+            background-image: linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(to right, var(--border-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto; gap: 24px; }
+        .feature-card { background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); padding: 32px; transition: all 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px -5px rgba(0,0,0,0.07); }
+        .feature-card.large { grid-column: span 2; }
+        .feature-card .icon { font-size: 1.75rem; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; }
+        .feature-card h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.02em; }
+        .feature-card p { color: var(--text-secondary); font-size: 1.1rem; }
+        
+        /* 8. SERVICES/EXPERTISE SECTION (ADAPTED) */
+        .services { padding: 100px 0; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; }
+        .service-item { display: flex; flex-direction: column; gap: 16px; background: var(--bg-secondary); padding: 32px; border-radius: var(--border-radius-md); border: 1px solid var(--border-color); transition: all 0.2s ease; }
+        .service-item:hover { transform: translateY(-4px); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .service-icon { font-size: 1.75rem; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .service-item h3 { font-size: 1.25rem; font-weight: 600; }
+        .service-item p { color: var(--text-secondary); font-size: 1rem; }
+
+        /* 9. TESTIMONIALS SECTION (NEW) */
+        .testimonials { padding: 100px 0; background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
+        .testimonial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+        .testimonial-card { padding: 32px; }
+        .testimonial-card p.quote { font-size: 1.25rem; font-weight: 500; line-height: 1.5; margin-bottom: 24px; }
+        .testimonial-author { display: flex; align-items: center; gap: 16px; }
+        .testimonial-author img { width: 48px; height: 48px; border-radius: 50%; }
+        .author-info h4 { font-weight: 600; }
+        .author-info span { color: var(--text-secondary); }
+
+        /* 10. TECHNOLOGIES SECTION (UPDATED) */
+        .technologies { padding: 100px 0; }
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 48px; }
+        .tech-item { text-align: center; }
+        .tech-item i { font-size: 3rem; color: #a0aec0; transition: all 0.3s ease; }
+        .tech-item:hover i { transform: scale(1.15); }
+        /* Brand colors on hover */
+        .tech-item:hover .fa-react { color: #61DAFB; }
+        .tech-item:hover .fa-node-js { color: #8CC84B; }
+        .tech-item:hover .fa-vuejs { color: #4FC08D; }
+        .tech-item:hover .fa-python { color: #3776AB; }
+        .tech-item:hover .fa-php { color: #777BB4; }
+        .tech-item:hover .fa-figma { color: #F24E1E; }
+        .tech-item:hover .fa-docker { color: #2496ED; }
+        .tech-item:hover .fa-aws { color: #FF9900; }
+
+        /* 11. CTA */
+        .cta { padding: 120px 0; text-align: center; }
+        .cta-content h2 { font-size: 2.75rem; font-weight: 800; letter-spacing: -0.03em; max-width: 700px; margin: 0 auto 24px; }
+        .cta-content p { font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 32px; }
+
+        /* 12. FOOTER */
+        footer { padding: 80px 0 40px; border-top: 1px solid var(--border-color); background: var(--bg-secondary); }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+        .footer-column h4 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
+        .footer-column ul { list-style: none; } .footer-column ul li { margin-bottom: 12px; }
+        .footer-column ul li a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s ease; }
+        .footer-column ul li a:hover { color: var(--text-primary); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-secondary); }
+        .social-links { display: flex; gap: 24px; }
+        .social-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s ease; font-size: 1.1rem; }
+        .social-links a:hover { color: var(--text-primary); }
+
+        /* 13. AI CHATBOT */
+        /* ... (chatbot styles unchanged) ... */
+        .chat-fab { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 1px solid var(--border-color); box-shadow: 0 8px 20px rgba(0,0,0,0.08); transition: transform 0.2s ease-in-out; animation: pulse-glow 3s infinite ease-in-out; }
+        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(37, 117, 252, 0.3); } 70% { box-shadow: 0 0 0 12px rgba(37, 117, 252, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 117, 252, 0); } }
+        .chat-fab:hover { transform: scale(1.1); animation-play-state: paused; }
+        .chat-fab i { font-size: 22px; color: var(--text-primary); }
+        .chat-window { position: fixed; bottom: 92px; right: 24px; width: 380px; height: 550px; background-color: white; border-radius: var(--border-radius-lg); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column; z-index: 1000; border: 1px solid var(--border-color); transform: translateY(20px); opacity: 0; pointer-events: none; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; }
+        .chat-window.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        .chat-header { padding: 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .chat-header h4 { font-weight: 600; }
+        .chat-header .close-chat { color: var(--text-secondary); cursor: pointer; font-size: 1.25rem; }
+        .chat-body { flex-grow: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .chat-message { padding: 10px 16px; border-radius: 1.25rem; max-width: 85%; line-height: 1.5; font-size: 0.95rem; }
+        .chat-message.user { background: var(--text-primary); color: white; align-self: flex-end; border-bottom-right-radius: 0.5rem; }
+        .chat-message.bot { background-color: var(--bg-subtle); color: var(--text-primary); align-self: flex-start; border-bottom-left-radius: 0.5rem; border: 1px solid var(--border-color); }
+        .chat-input-container { padding: 12px; border-top: 1px solid var(--border-color); }
+        .chat-input-container form { display: flex; align-items: center; gap: 8px; }
+        .chat-input-container input { flex-grow: 1; border: 1px solid var(--border-color); outline: none; padding: 10px 16px; background: var(--bg-color); border-radius: var(--border-radius-md); transition: all 0.2s; }
+        .chat-input-container input:focus { border-color: #2575FC; box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1); }
+        .chat-input-container button { background: var(--text-primary); border: none; color: white; width: 40px; height: 40px; border-radius: var(--border-radius-md); cursor: pointer; }
+        
+        /* 14. RESPONSIVE */
+        @media (max-width: 992px) {
+            .nav-links { display: none; }
+            .process-grid { grid-template-columns: repeat(2, 1fr); gap: 48px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .features-grid .feature-card.large { grid-column: span 1; }
+            .testimonial-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .hero, .services, .cta, .clients, .process, .features, .testimonials, .technologies { padding: 80px 0; }
+            .process-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .footer-bottom { flex-direction: column; gap: 24px; }
+            .chat-window { width: calc(100vw - 32px); right: 16px; bottom: 88px; }
+            .chat-fab { right: 16px; bottom: 16px; }
+        }
+    </style>
+    <!-- Simple Syntax Highlighting for Demo -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Solidity Designs Labs</div>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="#" class="btn btn-primary">Start a Project</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-content">
+                <h1>We build <span class="gradient-text">high-performance</span> software for modern teams.</h1>
+                <p>From pixel-perfect interfaces to scalable back-end architecture, we are a digital product agency that crafts exceptional user experiences.</p>
+                <a href="#" class="btn btn-primary">Schedule a Consultation <i class="fas fa-arrow-right"></i></a>
+                
+                <div class="hero-showcase">
+                    <div class="hero-showcase-inner">
+                        <h4><i class="fab fa-react"></i> UserProfile.tsx</h4>
+                        <pre><code class="language-jsx">export const UserProfile = ({ user }) => (
+  &lt;div className="profile"&gt;
+    &lt;img src={user.avatarUrl} alt={user.name} /&gt;
+    &lt;h2&gt;{user.name}&lt;/h2&gt;
+  &lt;/div&gt;
+);</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="clients">
+            <div class="container clients-container">
+                <span>TRUSTED BY INNOVATIVE COMPANIES WORLDWIDE</span>
+                <div class="clients-logos">
+                    <i class="fab fa-y-combinator" title="Y Combinator"></i>
+                    <i class="fab fa-notion" title="Notion"></i>
+                    <i class="fab fa-figma" title="Figma"></i>
+                    <i class="fab fa-digital-ocean" title="Digital Ocean"></i>
+                    <i class="fab fa-git-alt" title="Git"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="process" id="process">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Blueprint for Success</h2>
+                    <p>We follow a deliberate, collaborative process to ensure we deliver outstanding results on time and on budget.</p>
+                </div>
+                <div class="process-grid">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <h3>Discover & Strategize</h3>
+                        <p>We dive deep into your goals and audience to create a robust product strategy and roadmap.</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <h3>Design & Prototype</h3>
+                        <p>Crafting intuitive and beautiful user interfaces through wireframing and interactive prototypes.</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <h3>Develop & Iterate</h3>
+                        <p>Building your product with clean, scalable code and agile methodologies for continuous feedback.</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <h3>Deploy & Scale</h3>
+                        <p>Launching your application on robust infrastructure and ensuring it's ready to grow with your user base.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Engineered for Excellence</h2>
+                    <p>We don't just build features, we build foundations for your success. Here's what sets our work apart.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card large">
+                        <div class="icon"><i class="fas fa-palette"></i></div>
+                        <h3>Pixel-Perfect Design Systems</h3>
+                        <p>We create comprehensive design systems in Figma, ensuring brand consistency and accelerating development across all your digital touchpoints.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-bolt-lightning"></i></div>
+                        <h3>Blazing Fast</h3>
+                        <p>Performance isn't an afterthought. We optimize for sub-100ms response times.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-expand"></i></div>
+                        <h3>Scalable Architecture</h3>
+                        <p>Built on modern, serverless principles to handle millions of users effortlessly.</p>
+                    </div>
+                    <div class="feature-card large">
+                        <div class="icon"><i class="fas fa-cogs"></i></div>
+                        <h3>Seamless API Integrations</h3>
+                        <p>We connect your product to the essential third-party services you rely on, from payment gateways like Stripe to communication tools like Twilio.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="services" id="services">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Core Capabilities</h2>
+                    <p>From initial strategy to final deployment, we provide the end-to-end expertise required to build successful digital products.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-item">
+                        <div class="service-icon"><i class="fas fa-desktop"></i></div>
+                        <h3>Web App Development</h3>
+                        <p>Building lightning-fast, scalable front-ends and robust back-ends using modern frameworks like Next.js and Laravel.</p>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>Mobile App Development</h3>
+                        <p>Creating seamless cross-platform mobile experiences for iOS and Android using technologies like React Native.</p>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <h3>Cloud & DevOps</h3>
+                        <p>Ensuring your application is scalable, reliable, and secure with our cloud architecture and CI/CD pipeline expertise.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Loved by the World's Best Teams</h2>
+                    <p>We're more than an agency; we're a trusted partner in our clients' success.</p>
+                </div>
+                <div class="testimonial-grid">
+                    <div class="testimonial-card">
+                        <p class="quote">"The team at Solidity Designs Labs didn't just deliver a product; they delivered a masterpiece. Their attention to detail in both design and engineering is unparalleled."</p>
+                        <div class="testimonial-author">
+                            <img src="https://i.pravatar.cc/48?u=1" alt="Author 1">
+                            <div class="author-info">
+                                <h4>Sarah Johnson</h4>
+                                <span>CEO, Innovate Co.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="quote">"Working with them was a breath of fresh air. They moved incredibly fast, communicated clearly, and the final result exceeded all our expectations. Highly recommended."</p>
+                        <div class="testimonial-author">
+                            <img src="https://i.pravatar.cc/48?u=2" alt="Author 2">
+                            <div class="author-info">
+                                <h4>Michael Chen</h4>
+                                <span>CTO, TechFrontier</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="technologies">
+            <div class="container">
+                 <div class="section-header">
+                    <h2>Our Technology Stack</h2>
+                    <p>We use a modern, battle-tested technology stack to ensure your product is fast, secure, and scalable.</p>
+                </div>
+                <div class="tech-grid">
+                    <div class="tech-item" title="React / Next.js"><i class="fab fa-react"></i></div>
+                    <div class="tech-item" title="Node.js"><i class="fab fa-node-js"></i></div>
+                    <div class="tech-item" title="Vue.js"><i class="fab fa-vuejs"></i></div>
+                    <div class="tech-item" title="Python"><i class="fab fa-python"></i></div>
+                    <div class="tech-item" title="PHP"><i class="fab fa-php"></i></div>
+                    <div class="tech-item" title="Figma"><i class="fab fa-figma"></i></div>
+                    <div class="tech-item" title="Docker"><i class="fab fa-docker"></i></div>
+                    <div class="tech-item" title="AWS"><i class="fab fa-aws"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="container cta-content">
+                <h2>Have an ambitious project in mind?</h2>
+                <p>Let's build something great together.</p>
+                <a href="#" class="btn btn-primary">Start a Conversation &rarr;</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h4>Solidity Designs Labs</h4>
+                    <p style="color: var(--text-secondary); max-width: 250px;">Crafting the future of digital experiences.</p>
+                </div>
+                <div class="footer-column"><h4>Services</h4><ul><li><a href="#services">Web Apps</a></li><li><a href="#services">Mobile Apps</a></li><li><a href="#services">UI/UX Design</a></li><li><a href="#services">Cloud & DevOps</a></li></ul></div>
+                <div class="footer-column"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#features">Features</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+                <div class="footer-column"><h4>Connect</h4><ul><li><a href="#">Twitter</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">GitHub</a></li></ul></div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Solidity Designs Labs Inc. All rights reserved.</p>
+                <div class="social-links"><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-github"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI CHATBOT -->
+    <div class="chat-fab" id="chat-fab"><i class="fas fa-bolt"></i></div>
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            <h4>AI Project Consultant</h4>
+            <span class="close-chat" id="close-chat">&times;</span>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="chat-message bot">Hello! Interested in starting a project? Ask me anything about our services, process, or technology stack.</div>
+        </div>
+        <div class="chat-input-container">
+            <form id="chat-form">
+                <input type="text" id="chat-input-field" placeholder="e.g., 'Tell me about your design process...'" autocomplete="off">
+                <button type="submit" aria-label="Send"><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const chatFab = document.getElementById('chat-fab');
+        const chatWindow = document.getElementById('chat-window');
+        const closeChat = document.getElementById('close-chat');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input-field');
+        const chatBody = document.getElementById('chat-body');
+
+        chatFab.addEventListener('click', () => chatWindow.classList.toggle('active'));
+        closeChat.addEventListener('click', () => chatWindow.classList.remove('active'));
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userMessage = chatInput.value.trim();
+            if (!userMessage) return;
+            addMessage(userMessage, 'user');
+            chatInput.value = '';
+            setTimeout(() => botResponse(userMessage), 1200);
+        });
+
+        function addMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message', sender);
+            messageElement.textContent = text;
+            chatBody.appendChild(messageElement);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function botResponse(userMessage) {
+            let response = "That's a great question! Our process is designed for clarity and results. It begins with a deep-dive strategy session, followed by prototyping in Figma, agile development, and finally, deployment. Would you like to book a call?";
+            if (userMessage.toLowerCase().includes('price') || userMessage.toLowerCase().includes('cost')) {
+                response = "Pricing is custom for each project, based on scope and timeline. The best first step is to schedule a free consultation so we can understand your needs and provide a detailed estimate. Can I help you set that up?";
+            }
+            addMessage(response, 'bot');
+        }
+      });
+    </script>
+</body>
+</html>
