@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R for Data Science - Class 2 (Light/Dark Mode)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <style>
+        /* --- THEME-AWARE SETUP & VARIABLES --- */
+        :root {
+            /* Color Palette Definition */
+            --primary-blue: #3498db;
+            --accent-purple: #9b59b6;
+            
+            /* Light Theme Colors */
+            --light-bg: #f4f7f9;
+            --light-text-primary: #2c3e50;
+            --light-text-secondary: #7f8c8d;
+            --light-card-bg: rgba(255, 255, 255, 0.7);
+            --light-card-border: rgba(44, 62, 80, 0.1);
+            --light-code-bg: #fdfdfd;
+
+            /* Dark Theme Colors */
+            --dark-bg-start: #1d2b34;
+            --dark-bg-end: #141E27;
+            --dark-text-primary: #ecf0f1;
+            --dark-text-secondary: #bdc3c7;
+            --dark-card-bg: rgba(44, 62, 80, 0.5);
+            --dark-card-border: rgba(236, 240, 241, 0.2);
+            --dark-code-bg: #1e2227;
+
+            /* Font Families */
+            --heading-font: 'Montserrat', sans-serif;
+            --body-font: 'Roboto', sans-serif;
+
+            /* Default to Dark Theme Variables */
+            --bg-gradient: linear-gradient(135deg, var(--dark-bg-start), var(--dark-bg-end));
+            --text-primary: var(--dark-text-primary);
+            --text-secondary: var(--dark-text-secondary);
+            --card-bg: var(--dark-card-bg);
+            --card-border: var(--dark-card-border);
+            --code-bg: var(--dark-code-bg);
+            --output-bg: rgba(20, 30, 39, 0.6);
+            
+            /* Syntax Highlighting (Dark) */
+            --code-comment: #8d93a6;
+            --code-operator: var(--accent-purple);
+            --code-string: #e6db74;
+            --code-number: #a6e22e;
+            --code-function: #66d9ef;
+            --code-variable: #f92672;
+            --code-keyword: #fd971f;
+        }
+
+        body.light-mode {
+            /* Switch to Light Theme Variables */
+            --bg-gradient: var(--light-bg);
+            --text-primary: var(--light-text-primary);
+            --text-secondary: var(--light-text-secondary);
+            --card-bg: var(--light-card-bg);
+            --card-border: var(--light-card-border);
+            --code-bg: var(--light-code-bg);
+            --output-bg: #f8f9fa;
+
+            /* Syntax Highlighting (Light) */
+            --code-comment: #9ca3af;
+            --code-operator: var(--accent-purple);
+            --code-string: #c41a16;
+            --code-number: #1c00cf;
+            --code-function: #7928a1;
+            --code-variable: #003369;
+            --code-keyword: #aa5d00;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; }
+
+        body {
+            font-family: var(--body-font);
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        /* --- Slideshow Container & Slides --- */
+        .slideshow-container { position: relative; width: 100vw; height: 100vh; }
+        .slide {
+            display: none; width: 100%; height: 100%; padding: 40px 60px;
+            text-align: center; flex-direction: column; justify-content: center;
+            align-items: center; position: absolute; opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .slide.active-slide { display: flex; opacity: 1; z-index: 1; transform: translateY(0); }
+
+        /* --- Slide Content Styling --- */
+        .slide h1, .slide h2, .slide h3 { font-family: var(--heading-font); margin-bottom: 1.5rem; }
+        .slide h1 { font-size: 3.8rem; color: var(--text-primary); }
+        .slide h2 { font-size: 2.8rem; color: var(--primary-blue); font-weight: 700; }
+        .slide h3 { font-size: 1.6rem; color: var(--text-secondary); font-weight: 400; margin-bottom: 1rem; }
+        .slide p { font-size: 1.3rem; line-height: 1.7; max-width: 900px; font-weight: 300; margin-bottom: 1.5rem; }
+        .slide ul { list-style: none; text-align: left; margin-top: 1.5rem; }
+        .slide ul li { margin-bottom: 1rem; display: flex; align-items: center; font-size: 1.3rem; }
+        .slide ul li .fa-solid { color: var(--accent-purple); margin-right: 1.2rem; font-size: 1.5rem; width: 30px; text-align: center; }
+
+        /* --- Card, Code & Table Styling --- */
+        .card, pre, .data-frame-table {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            transition: background 0.4s ease, border 0.4s ease;
+        }
+
+        pre { padding: 1.5rem; text-align: left; font-size: 1.05rem; line-height: 1.6; margin: 0; overflow-x: hidden; background: var(--code-bg); }
+        code .comment { color: var(--code-comment); font-style: italic; }
+        code .operator { color: var(--code-operator); }
+        code .string { color: var(--code-string); }
+        code .number { color: var(--code-number); }
+        code .function { color: var(--code-function); }
+        code .variable { color: var(--code-variable); }
+        code .keyword { color: var(--code-keyword); }
+
+        pre.output-console { background: var(--output-bg); color: var(--text-secondary); font-family: 'Courier New', Courier, monospace; }
+
+        .data-frame-table { border-collapse: collapse; font-size: 1.05rem; width: 100%; overflow: hidden; }
+        .data-frame-table thead tr { background-color: rgba(155, 89, 182, 0.5); color: #ffffff; text-align: left; font-weight: 500; }
+        .data-frame-table th, .data-frame-table td { padding: 12px 18px; }
+        .data-frame-table tbody tr { border-bottom: 1px solid var(--card-border); }
+        .data-frame-table tbody tr:last-of-type { border-bottom: none; }
+        
+        /* Side-by-Side Layout */
+        .side-by-side-container { display: flex; justify-content: center; align-items: center; gap: 1.5rem; width: 100%; max-width: 1300px; margin-top: 1rem; }
+        .code-pane, .output-pane { flex: 1; min-width: 0; }
+        .flow-arrow { font-size: 2.5rem; color: var(--card-border); transition: color 0.4s ease; animation: pulse 2s infinite ease-in-out; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } }
+
+        /* Navigation & Progress */
+        .prev, .next, .progress-container, .theme-switch-wrapper { z-index: 10; }
+        .prev, .next { cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; color: var(--text-primary); font-size: 20px; transition: all 0.3s ease; border-radius: 50%; user-select: none; background: var(--card-bg); border: 1px solid var(--card-border); }
+        .next { right: 30px; }
+        .prev { left: 30px; }
+        .prev:hover, .next:hover { background-color: var(--accent-purple); color: white; transform: translateY(-50%) scale(1.1); }
+        .progress-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 5px; background-color: var(--card-bg); }
+        .progress-bar { height: 100%; background-color: var(--accent-purple); width: 0%; transition: width 0.4s ease-out; }
+
+        /* THEME TOGGLE SWITCH */
+        .theme-switch-wrapper { position: absolute; top: 25px; right: 30px; display: flex; align-items: center; gap: 10px; color: var(--text-secondary); }
+        .theme-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--card-bg); border: 1px solid var(--card-border); transition: .4s; border-radius: 26px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: var(--text-secondary); transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-purple); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        /* Helper Classes */
+        .icon-large { font-size: 6rem; color: var(--primary-blue); margin-bottom: 2rem; }
+        .text-purple { color: var(--accent-purple); }
+        .text-blue { color: var(--primary-blue); }
+        .highlight { background: linear-gradient(to top, var(--accent-purple) 45%, transparent 45%); padding: 0 8px; border-radius: 4px; }
+        body.light-mode .highlight { color: var(--dark-text-primary); }
+
+    </style>
+</head>
+<body>
+    
+    <!-- Theme Toggle -->
+    <div class="theme-switch-wrapper">
+        <i class="fas fa-sun"></i>
+        <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+    </div>
+
+    <div class="slideshow-container">
+
+        <!-- Slide 1: Title -->
+        <div class="slide active-slide">
+            <i class="fa-solid fa-wand-magic-sparkles icon-large"></i>
+            <h1>Level Up Your R Skills</h1>
+            <h2 class="text-purple">The Magic of Data Manipulation</h2>
+            <h4>Jimmy X - Class 2</h4>
+        </div>
+
+        <!-- ... all other slides remain identical in their HTML structure ... -->
+        <!-- I will paste one split-view slide so you can see it works. The rest follow the same pattern -->
+
+        <!-- Slide 7: select() -->
+        <div class="slide">
+            <h2>Verb #1: `select()` <i class="fa-solid fa-columns text-blue"></i> (Pick Columns)</h2>
+            <div class="side-by-side-container">
+                <div class="code-pane">
+                    <pre><code class="language-r"><span class="comment"># Select the name and age</span>
+<span class="variable">pets_df</span> <span class="operator">%>%</span> 
+  <span class="function">select</span>(name, age)
+</code></pre>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                <div class="output-pane">
+                    <table class="data-frame-table">
+                        <thead><tr><th>name</th><th>age</th></tr></thead>
+                        <tbody>
+                            <tr><td>Fido</td><td>3</td></tr>
+                            <tr><td>Whiskers</td><td>5</td></tr>
+                            <tr><td>Chirpy</td><td>2</td></tr>
+                            <tr><td>Spike</td><td>8</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ALL OTHER SLIDES (2-6, 8-16) GO HERE, UNCHANGED FROM THE PREVIOUS VERSION -->
+        <!-- Paste the slide content from `R_class_2_v3_split_view.html` here -->
+        
+        <!-- Slide 2: Agenda -->
+        <div class="slide">
+            <h2>Today's Adventure Map 🗺️</h2>
+            <ul>
+                <li><i class="fa-solid fa-rotate-left"></i>Quick Recap: Remembering Data Frames</li>
+                <li><i class="fa-solid fa-border-all"></i>From Vectors to Grids: Meet the Matrix</li>
+                <li><i class="fa-solid fa-book-open-reader"></i>The Tidyverse: A Data Scientist's Toolkit</li>
+                <li><i class="fa-solid fa-gears"></i>Mastering <span class="text-purple">`dplyr`</span>: The Verbs of Power</li>
+                <li><i class="fa-solid fa-arrow-right-arrow-left"></i>The Magic Pipe <span class="text-purple">`%>%`</span>: Chaining Your Commands</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Recap -->
+        <div class="slide">
+            <h2>Last Time, We Made a Data Frame...</h2>
+            <div class="side-by-side-container">
+                <div class="code-pane">
+                    <pre><code class="language-r"><span class="comment"># Our data from Class 1</span>
+<span class="variable">pets_df</span> <span class="operator">&lt;-</span> <span class="function">data.frame</span>(
+  name <span class="operator">=</span> <span class="function">c</span>(<span class="string">"Fido"</span>, <span class="string">"Whiskers"</span>, 
+           <span class="string">"Chirpy"</span>, <span class="string">"Spike"</span>),
+  age  <span class="operator">=</span> <span class="function">c</span>(<span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">8</span>),
+  cute <span class="operator">=</span> <span class="function">c</span>(TRUE, TRUE, 
+           TRUE, FALSE)
+)</code></pre>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                <div class="output-pane">
+                    <table class="data-frame-table">
+                        <thead><tr><th>name</th><th>age</th><th>cute</th></tr></thead>
+                        <tbody>
+                            <tr><td>Fido</td><td>3</td><td>TRUE</td></tr>
+                            <tr><td>Whiskers</td><td>5</td><td>TRUE</td></tr>
+                            <tr><td>Chirpy</td><td>2</td><td>TRUE</td></tr>
+                            <tr><td>Spike</td><td>8</td><td>FALSE</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Matrices -->
+        <div class="slide">
+            <h2>The Matrix: A Grid of Numbers</h2>
+            <p>A matrix requires <span class="highlight">all elements to be the same data type</span>.</p>
+            <div class="side-by-side-container">
+                <div class="code-pane">
+                    <pre><code class="language-r"><span class="comment"># Create a 2x3 matrix</span>
+<span class="variable">my_matrix</span> <span class="operator">&lt;-</span> <span class="function">matrix</span>(
+  data <span class="operator">=</span> <span class="number">1</span>:<span class="number">6</span>, 
+  <span class="keyword">nrow</span> <span class="operator">=</span> <span class="number">2</span>, 
+  <span class="keyword">ncol</span> <span class="operator">=</span> <span class="number">3</span>
+)
+
+<span class="comment"># Print the matrix</span>
+<span class="variable">my_matrix</span>
+</code></pre>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                <div class="output-pane">
+                    <pre class="output-console"><code>     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Tidyverse & dplyr -->
+        <div class="slide">
+            <i class="fa-solid fa-book-open-reader icon-large"></i>
+            <h2>The Tidyverse & `dplyr`</h2>
+            <p><span class="text-blue">The Tidyverse</span> is a collection of essential R packages. <span class="text-purple">`dplyr`</span> provides a "grammar" for data manipulation.</p>
+            <pre><code class="language-r"><span class="comment"># Install it ONCE from the console</span>
+<span class="function">install.packages</span>(<span class="string">"tidyverse"</span>)
+
+<span class="comment"># Load it at the start of EVERY script</span>
+<span class="function">library</span>(tidyverse)</code></pre>
+        </div>
+
+        <!-- Slide 6: The Pipe -->
+        <div class="slide">
+            <i class="fa-solid fa-arrow-right-arrow-left icon-large" style="transform: rotate(90deg);"></i>
+            <h2>The Magic Pipe: `%>%`</h2>
+            <p>This operator takes the result of one step and "pipes" it into the next. Read it as <span class="highlight">"and then"</span>.</p>
+            <pre><code class="language-r"><span class="comment"># WITHOUT the pipe (hard to read, inside-out logic)</span>
+<span class="function">summarise</span>(<span class="function">filter</span>(<span class="variable">pets_df</span>, age <span class="operator">></span> <span class="number">2</span>))
+
+<span class="comment"># WITH the pipe (beautiful and clear!)</span>
+<span class="variable">pets_df</span> <span class="operator">%>%</span> 
+  <span class="function">filter</span>(age <span class="operator">></span> <span class="number">2</span>) <span class="operator">%>%</span> 
+  <span class="function">summarise</span>()</code></pre>
+        </div>
+        
+        <!-- Slide 8: filter() -->
+        <div class="slide">
+            <h2>Verb #2: `filter()` <i class="fa-solid fa-filter text-blue"></i> (Pick Rows)</h2>
+            <div class="side-by-side-container">
+                <div class="code-pane">
+                    <pre><code class="language-r"><span class="comment"># Keep pets older than 3</span>
+<span class="variable">pets_df</span> <span class="operator">%>%</span> 
+  <span class="function">filter</span>(age <span class="operator">></span> <span class="number">3</span>)
+</code></pre>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                <div class="output-pane">
+                    <table class="data-frame-table">
+                        <thead><tr><th>name</th><th>age</th><th>cute</th></tr></thead>
+                        <tbody>
+                            <tr><td>Whiskers</td><td>5</td><td>TRUE</td></tr>
+                            <tr><td>Spike</td><td>8</td><td>FALSE</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: arrange() -->
+        <div class="slide">
+            <h2>Verb #3: `arrange()` <i class="fa-solid fa-sort-amount-down text-blue"></i> (Sort Rows)</h2>
+            <div class="side-by-side-container">
+                <div class="code-pane">
+                    <pre><code class="language-r"><span class="comment"># Sort from oldest to youngest</span>
+<span class="variable">pets_df</span> <span class="operator">%>%</span> 
+  <span class="function">arrange</span>(<span class="function">desc</span>(age))
+</code></pre>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                <div class="output-pane">
+                    <table class="data-frame-table">
+                        <thead><tr><th>name</th><th>age</th><th>cute</th></tr></thead>
+                        <tbody>
+                            <tr><td>Spike</td><td>8</td><td>FALSE</td></tr>
+                            <tr><td>Whiskers</td><td>5</td><td>TRUE</td></tr>
+                            <tr><td>Fido</td><td>3</td><td>TRUE</td></tr>
+                            <tr><td>Chirpy</td><td>2</td><td>TRUE</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: mutate() -->
+        <div class="slide">
+            <h2>Verb #4: `mutate()` <i class="fa-solid fa-circle-plus text-blue"></i> (Create Columns)</h2>
+            <div class="side-by-side-container">
+                <div class="code-pane">
+                    <pre><code class="language-r"><span class="comment"># Create age in dog years</span>
+<span class="variable">pets_df</span> <span class="operator">%>%</span> 
+  <span class="function">mutate</span>(dog_years <span class="operator">=</span> age <span class="operator">*</span> <span class="number">7</span>)
+</code></pre>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                <div class="output-pane">
+                    <table class="data-frame-table">
+                        <thead><tr><th>name</th><th>age</th><th>cute</th><th>dog_years</th></tr></thead>
+                        <tbody>
+                            <tr><td>Fido</td><td>3</td><td>TRUE</td><td>21</td></tr>
+                            <tr><td>Whiskers</td><td>5</td><td>TRUE</td><td>35</td></tr>
+                            <tr><td>Chirpy</td><td>2</td><td>TRUE</td><td>14</td></tr>
+                            <tr><td>Spike</td><td>8</td><td>FALSE</td><td>56</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: summarise() -->
+        <div class="slide">
+            <h2>Verb #5: `summarise()` <i class="fa-solid fa-calculator text-blue"></i> (Collapse Data)</h2>
+             <div class="side-by-side-container">
+                <div class="code-pane">
+                    <pre><code class="language-r"><span class="comment"># Get summary statistics</span>
+<span class="variable">pets_df</span> <span class="operator">%>%</span> <span class="function">summarise</span>(
+    average_age <span class="operator">=</span> <span class="function">mean</span>(age),
+    oldest_pet <span class="operator">=</span> <span class="function">max</span>(age)
+  )
+</code></pre>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                <div class="output-pane">
+                    <table class="data-frame-table">
+                        <thead><tr><th>average_age</th><th>oldest_pet</th></tr></thead>
+                        <tbody>
+                            <tr><td>4.5</td><td>8</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Combining Verbs -->
+        <div class="slide">
+            <h2>Putting It All Together!</h2>
+            <h3 class="text-purple">"Names of cute pets, from youngest to oldest?"</h3>
+            <div class="side-by-side-container">
+                <div class="code-pane">
+                    <pre><code class="language-r"><span class="variable">pets_df</span> <span class="operator">%>%</span> 
+  <span class="function">filter</span>(cute <span class="operator">==</span> TRUE) <span class="operator">%>%</span>
+  <span class="function">arrange</span>(age) <span class="operator">%>%</span>
+  <span class="function">select</span>(name, age)
+</code></pre>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                <div class="output-pane">
+                    <table class="data-frame-table">
+                        <thead><tr><th>name</th><th>age</th></tr></thead>
+                        <tbody>
+                            <tr><td>Chirpy</td><td>2</td></tr>
+                            <tr><td>Fido</td><td>3</td></tr>
+                            <tr><td>Whiskers</td><td>5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Group By -->
+        <div class="slide">
+            <h2>The Ultimate Combo: `group_by()`</h2>
+            <h3 class="text-purple">"What's the average age per pet type?"</h3>
+            <div class="side-by-side-container">
+                <div class="code-pane">
+                    <pre><code class="language-r"><span class="variable">pets_df</span> <span class="operator">%>%</span> 
+  <span class="function">mutate</span>(type <span class="operator">=</span> <span class="function">c</span>(<span class="string">"Dog"</span>, <span class="string">"Cat"</span>, 
+                  <span class="string">"Bird"</span>, <span class="string">"Dog"</span>)) <span class="operator">%>%</span> 
+  <span class="function">group_by</span>(type) <span class="operator">%>%</span> 
+  <span class="function">summarise</span>(avg_age <span class="operator">=</span> <span class="function">mean</span>(age))
+</code></pre>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                <div class="output-pane">
+                    <table class="data-frame-table">
+                        <thead><tr><th>type</th><th>avg_age</th></tr></thead>
+                        <tbody>
+                            <tr><td>Bird</td><td>2.0</td></tr>
+                            <tr><td>Cat</td><td>5.0</td></tr>
+                            <tr><td>Dog</td><td>5.5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 14: Recap -->
+        <div class="slide">
+            <h2>Amazing Work! 🚀 Recap</h2>
+            <ul>
+                <li><i class="fa-solid fa-star"></i><span class="text-blue">Matrices</span> are strict grids (all one data type).</li>
+                <li><i class="fa-solid fa-star"></i>The <span class="text-blue">Tidyverse</span> (`dplyr`!) is your go-to for data manipulation.</li>
+                <li><i class="fa-solid fa-star"></i>The pipe <span class="text-purple">`%>%`</span> means "and then..." and makes code readable.</li>
+                <li><i class="fa-solid fa-star"></i>You learned the 5 core verbs: <span class="text-blue">`select`, `filter`, `arrange`, `mutate`, `summarise`</span>.</li>
+                <li><i class="fa-solid fa-star"></i>You unlocked the power of <span class="text-blue">`group_by()`</span> for group analysis.</li>
+            </ul>
+        </div>
+        
+        <!-- Slide 15: Homework -->
+        <div class="slide">
+             <i class="fa-solid fa-dungeon icon-large"></i>
+             <h2>Your Next Quest! (Homework)</h2>
+             <p style="text-align: left; max-width: 700px;">
+                <strong>Your Mission:</strong> Take your `my_faves_df` from last time and use your new `dplyr` powers! <br><br>
+                1. <strong>`filter()`:</strong> Keep only rows that meet a criteria (e.g., movies after 2010, songs with rating > 4).<br>
+                2. <strong>`mutate()`:</strong> Add a new column based on an existing one.<br>
+                3. <strong>`arrange()`:</strong> Sort your data frame by one of your columns.<br>
+                4. <strong>Chain them!</strong> Do all three steps in a single pipe `%>%` chain.
+             </p>
+        </div>
+        
+        <!-- Slide 16: Next Time -->
+        <div class="slide">
+            <h1>Questions & Next Steps</h1>
+            <h2>You can now wrangle data like a pro!</h2>
+            <div style="margin-top: 3rem;">
+                <h3>Next Time: From Tables to Insights</h3>
+                <p>We've cleaned our data. Now it's time to make it beautiful with <span class="text-purple">`ggplot2`</span>, the world's best data visualization library!</p>
+            </div>
+        </div>
+
+
+        <!-- Navigation & Progress Bar -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- SLIDESHOW LOGIC ---
+        let slideIndex = 1;
+        const slides = document.getElementsByClassName("slide");
+        const progressBar = document.getElementById("progressBar");
+
+        function showSlides(n) {
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active-slide");
+            }
+            
+            slides[slideIndex - 1].classList.add("active-slide");
+
+            const progressPercentage = (slideIndex / slides.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                plusSlides(1);
+            } else if (e.key === 'ArrowLeft') {
+                plusSlides(-1);
+            }
+        });
+
+        // --- THEME SWITCHER LOGIC ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Function to apply the saved theme on page load
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                body.classList.add('light-mode');
+                themeToggle.checked = false; // Sun is visible
+            } else {
+                body.classList.remove('light-mode');
+                themeToggle.checked = true; // Moon is visible
+            }
+        }
+
+        // Event listener for the toggle
+        themeToggle.addEventListener('change', () => {
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Initial calls on page load
+        applySavedTheme();
+        showSlides(slideIndex);
+    </script>
+</body>
+</html>
