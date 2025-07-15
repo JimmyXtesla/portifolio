@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications | AMS Archive | MUST</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa; 
+            --bg-accent: #111827; 
+            --bg-dark: #0c1221; 
+            
+            --text-primary: #111827; 
+            --text-secondary: #4b5563; 
+            --text-muted: #6b7280; 
+            --text-light: #f9fafb;
+            
+            --color-primary: #002D62; /* Deep Academic Blue */
+            --color-primary-light: #E6ECF5; 
+            --color-primary-dark: #001A3A;
+
+            --color-accent: #A92C2C; /* Dark Authoritative Red */
+            --color-accent-dark: #8B2323; 
+            --color-accent-light: #FAEBEB;
+
+            --border-color: #e5e7eb; 
+            --border-focus: var(--color-primary);
+
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            --shadow-sm: 0 2px 4px -1px rgba(0,0,0,0.04), 0 1px 3px 0 rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 10px -2px rgba(0,0,0,0.05), 0 2px 8px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 24px -6px rgba(0,0,0,0.07), 0 5px 15px -3px rgba(0,0,0,0.08);
+
+            --transition-fast: 0.2s ease-in-out;
+            --transition-normal: 0.3s ease-in-out;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Header (from index.html) */
+        header {
+            padding: 18px 0; position: sticky; /* Sticky is better for a utility page */
+            width: 100%; top: 0; z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            transition: box-shadow var(--transition-fast);
+        }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo {
+            font-size: 1.8rem; font-weight: 700; color: var(--color-primary);
+            text-decoration: none; letter-spacing: -0.7px;
+        }
+        .logo span { color: var(--text-primary); font-weight: 500; }
+        .nav-links { display: flex; list-style: none; align-items: center; }
+        .nav-links li { margin-left: 28px; } 
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none; font-weight: 500;
+            font-size: 0.92rem;
+            transition: color var(--transition-fast);
+            position: relative; padding: 6px 0;
+        }
+        .nav-links a:hover { color: var(--color-primary); }
+        .nav-links a.active { /* Style for the active page link */
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+        .cta-button {
+            background: var(--color-accent); color: #fff; padding: 10px 24px; border-radius: 8px;
+            font-weight: 600; font-size: 0.9rem; transition: all var(--transition-fast);
+            display: inline-block; border: none; cursor: pointer; text-decoration: none;
+            box-shadow: 0 4px 12px rgba(169, 44, 44, 0.2);
+        }
+        .cta-button:hover {
+            transform: translateY(-2px); background: var(--color-accent-dark);
+            box-shadow: 0 6px 16px rgba(169, 44, 44, 0.3);
+        }
+        .mobile-menu { display: none; font-size: 1.8rem; cursor: pointer; color: var(--text-primary); }
+
+        /* Search Hero */
+        .search-hero {
+            background-color: var(--bg-secondary);
+            padding: 60px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .search-hero h1 {
+            font-size: 2.8rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+        .search-hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .search-form {
+            display: flex;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: var(--shadow-md);
+            border-radius: 12px;
+        }
+        .search-form input {
+            flex-grow: 1;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+            padding: 16px 20px;
+            border-radius: 12px 0 0 12px;
+            border-right: none;
+        }
+        .search-form input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-primary-light);
+        }
+        .search-form button {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 0 12px 12px 0;
+            transition: background-color var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .search-form button:hover {
+            background-color: var(--color-primary-dark);
+        }
+        
+        /* Main Layout */
+        .publications-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+            padding: 60px 0;
+        }
+
+        /* Filters Sidebar */
+        .filters-sidebar {
+            background-color: var(--bg-secondary);
+            padding: 25px;
+            border-radius: 12px;
+            height: fit-content;
+            position: sticky;
+            top: 120px; /* Adjust based on header height */
+        }
+        .filter-group {
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 25px;
+        }
+        .filter-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .filter-group h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+        .filter-group ul {
+            list-style: none;
+        }
+        .filter-group li {
+            margin-bottom: 10px;
+        }
+        .filter-group label {
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .filter-group input[type="checkbox"] {
+            margin-right: 10px;
+            accent-color: var(--color-primary);
+        }
+        .filter-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+        .filter-group .filter-button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .clear-filters {
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--color-accent);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* Publications List */
+        .publications-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+        .results-count { color: var(--text-muted); }
+        .sort-by select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .publication-item {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all var(--transition-fast);
+        }
+        .publication-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-primary);
+        }
+        .publication-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .publication-title {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        .publication-title a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        .publication-title a:hover {
+            color: var(--color-primary);
+        }
+        .publication-authors {
+            font-weight: 500;
+            color: var(--color-primary);
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        .publication-abstract {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .publication-tags span {
+            display: inline-block;
+            background-color: var(--color-accent-light);
+            color: var(--color-accent-dark);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .publication-actions {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+        }
+        .primary-action {
+            background-color: var(--color-primary);
+            color: #fff;
+        }
+        .primary-action:hover {
+            background-color: var(--color-primary-dark);
+        }
+        .secondary-action {
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary-light);
+        }
+        .secondary-action:hover {
+            background-color: var(--color-primary-light);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-top: 40px;
+        }
+        .pagination li a {
+            color: var(--text-secondary);
+            padding: 10px 15px;
+            margin: 0 3px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+        .pagination li a:hover {
+            background-color: var(--color-primary-light);
+            border-color: var(--color-primary);
+        }
+        .pagination li.active a {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+        .pagination li.disabled a {
+            color: #ccc;
+            pointer-events: none;
+        }
+        
+        /* Footer (from index.html) */
+        footer { background-color: var(--bg-accent); color: var(--text-light); padding: 80px 0 35px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 60px; }
+        .footer-logo { font-size: 1.6rem; font-weight: 700; color: var(--color-primary); margin-bottom: 18px; display: inline-block; text-decoration: none; }
+        .footer-logo span { color: var(--text-light); }
+        .footer-about p { color: var(--text-light); opacity: 0.8; }
+        .social-links { display: flex; gap: 18px; margin-top: 20px; }
+        .social-links a { color: var(--text-light); opacity: 0.6; font-size: 1.3rem; transition: all var(--transition-fast); }
+        .social-links a:hover { opacity: 1; color: var(--color-accent); }
+        .footer-links h3 { font-size: 1.1rem; margin-bottom: 18px; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-light); opacity: 0.75; text-decoration: none; transition: all var(--transition-fast); }
+        .footer-links a:hover { opacity: 1; color: var(--color-accent); }
+        .footer-bottom { text-align: center; padding-top: 35px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.85rem; opacity: 0.6; }
+        .footer-bottom a { color: var(--text-light); }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .publications-layout { grid-template-columns: 1fr; }
+            .filters-sidebar { position: static; margin-bottom: 40px; }
+            .mobile-menu { display: block; }
+            .nav-links { display: none; }
+            .nav-links.active { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background-color: var(--bg-primary); padding: 20px 0; box-shadow: var(--shadow-lg); }
+            .nav-links.active li { margin: 12px 0; }
+        }
+        @media (max-width: 768px) {
+            .search-hero h1 { font-size: 2.2rem; }
+            .search-form { flex-direction: column; }
+            .search-form input { border-radius: 12px 12px 0 0; border-right: 1px solid var(--border-color); }
+            .search-form button { border-radius: 0 0 12px 12px; justify-content: center; padding: 16px; }
+            .publications-list-header { flex-direction: column; gap: 15px; align-items: flex-start; }
+            footer .footer-content { text-align: center; }
+            footer .social-links { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">AMS<span>Archive</span></a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="publications.html" class="active">Publications</a></li>
+                    <li><a href="index.html#policies">For Authors</a></li>
+                    <li><a href="index.html#submit" class="cta-button">Submit Paper</a></li>
+                </ul>
+                <div class="mobile-menu">☰</div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Search Hero Section -->
+        <section class="search-hero">
+            <div class="container">
+                <h1>Explore Publications</h1>
+                <p>Search the complete repository of research from the Academy of Medical Sciences.</p>
+                <form class="search-form">
+                    <input type="search" placeholder="Search by title, author, or keyword (e.g., malaria, Banda, etc.)">
+                    <button type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                        Search
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Main Content Layout -->
+        <div class="container publications-layout">
+            <!-- Filters Sidebar -->
+            <aside class="filters-sidebar">
+                <div class="filter-group">
+                    <h3>Filter by Type</h3>
+                    <ul>
+                        <li><label><input type="checkbox" name="type" value="article"> Original Article</label></li>
+                        <li><label><input type="checkbox" name="type" value="review"> Review Article</label></li>
+                        <li><label><input type="checkbox" name="type" value="case"> Case Report</label></li>
+                        <li><label><input type="checkbox" name="type" value="thesis"> Thesis/Dissertation</label></li>
+                        <li><label><input type="checkbox" name="type" value="editorial"> Editorial</label></li>
+                    </ul>
+                </div>
+                <div class="filter-group">
+                    <h3>Filter by Research Area</h3>
+                    <ul>
+                        <li><label><input type="checkbox" name="area" value="infectious"> Infectious Diseases</label></li>
+                        <li><label><input type="checkbox" name="area" value="ncd"> Non-Communicable Diseases</label></li>
+                        <li><label><input type="checkbox" name="area" value="public"> Public Health</label></li>
+                        <li><label><input type="checkbox" name="area" value="clinical"> Clinical Sciences</label></li>
+                        <li><label><input type="checkbox" name="area" value="surgical"> Surgical Sciences</label></li>
+                    </ul>
+                </div>
+                <div class="filter-group">
+                    <h3>Filter by Year</h3>
+                    <select name="year">
+                        <option value="">All Years</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                    </select>
+                </div>
+                <button class="cta-button filter-button">Apply Filters</button>
+                <div class="clear-filters">Clear All Filters</div>
+            </aside>
+
+            <!-- Publications List -->
+            <div class="publications-list">
+                <div class="publications-list-header">
+                    <div class="results-count">Showing 1-10 of 157 results</div>
+                    <div class="sort-by">
+                        <label for="sort">Sort by: </label>
+                        <select id="sort" name="sort">
+                            <option value="newest">Newest First</option>
+                            <option value="cited">Most Cited</option>
+                            <option value="relevant">Relevance</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- DUMMY CONTENT: These would be generated by a backend system. -->
+                <article class="publication-item">
+                    <div class="publication-meta">Malawi Journal of Medicine, Vol. 8, Iss. 2 • May 2024</div>
+                    <h2 class="publication-title"><a href="#">Prevalence of Antiretroviral Drug Resistance in HIV-1 Patients in Blantyre</a></h2>
+                    <p class="publication-authors">Phiri, J., Moyo, L., Banda, C.</p>
+                    <p class="publication-abstract">This cross-sectional study investigated the prevalence of drug resistance mutations in patients receiving long-term antiretroviral therapy (ART) at a major referral hospital, providing crucial data for national treatment guidelines...</p>
+                    <div class="publication-tags">
+                        <span>HIV</span><span>ART</span><span>Drug Resistance</span><span>Malawi</span>
+                    </div>
+                    <div class="publication-actions">
+                        <a href="#" class="action-button primary-action">View PDF</a>
+                        <a href="single.html" class="action-button secondary-action">Details</a>
+                        <a href="#" class="action-button secondary-action">Cite</a>
+                    </div>
+                </article>
+
+                <article class="publication-item">
+                    <div class="publication-meta">Journal of Clinical Case Reports • May 2024</div>
+                    <h2 class="publication-title"><a href="#">Atypical Presentation of Cerebral Malaria in a Pediatric Patient</a></h2>
+                    <p class="publication-authors">Banda, C.</p>
+                    <p class="publication-abstract">We report a case of a 5-year-old child presenting with unusual neurological symptoms, highlighting the diagnostic challenges of cerebral malaria in resource-limited settings and the importance of a high index of suspicion...</p>
+                    <div class="publication-tags">
+                        <span>Malaria</span><span>Pediatrics</span><span>Neurology</span>
+                    </div>
+                    <div class="publication-actions">
+                        <a href="#" class="action-button primary-action">View PDF</a>
+                        <a href="single.html" class="action-button secondary-action">Details</a>
+                        <a href="#" class="action-button secondary-action">Cite</a>
+                    </div>
+                </article>
+
+                <article class="publication-item">
+                    <div class="publication-meta">MUST Public Health Review • April 2024</div>
+                    <h2 class="publication-title"><a href="#">The Growing Burden of Non-Communicable Diseases in Malawi: A Systematic Review</a></h2>
+                    <p class="publication-authors">Moyo, L., Patel, S.</p>
+                    <p class="publication-abstract">This review synthesizes two decades of data on the trends, risk factors, and health system responses for major NCDs, including hypertension and diabetes, providing a roadmap for future public health interventions...</p>
+                    <div class="publication-tags">
+                        <span>NCDs</span><span>Hypertension</span><span>Public Health</span><span>Systematic Review</span>
+                    </div>
+                    <div class="publication-actions">
+                        <a href="#" class="action-button primary-action">View PDF</a>
+                        <a href="single.html" class="action-button secondary-action">Details</a>
+                        <a href="#" class="action-button secondary-action">Cite</a>
+                    </div>
+                </article>
+                <!-- End Dummy Content -->
+                
+                <nav aria-label="Pagination">
+                    <ul class="pagination">
+                        <li class="disabled"><a href="#">&laquo;</a></li>
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">...</a></li>
+                        <li><a href="#">16</a></li>
+                        <li><a href="#">&raquo;</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <a href="index.html" class="footer-logo">AMS<span>Archive</span></a>
+                    <p>The official scholarly repository for the Academy of Medical Sciences, MUST.</p>
+                    <div class="social-links">
+                        <a href="#" title="X/Twitter"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
+                        <a href="#" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="publications.html">Advanced Search</a></li>
+                        <li><a href="index.html#research-areas">Browse by Discipline</a></li>
+                        <li><a href="index.html#policies">Ethics Policies</a></li>
+                        <li><a href="#">Contact the Editors</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>About MUST</h3>
+                    <ul>
+                        <li><a href="#">Main University Website</a></li>
+                        <li><a href="#">Academy of Medical Sciences</a></li>
+                        <li><a href="#">University Library</a></li>
+                        <li><a href="#">MUST Research Directorate</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Malawi University of Science and Technology. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.querySelector('.mobile-menu');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (mobileMenuButton && navLinks) {
+                mobileMenuButton.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    mobileMenuButton.innerHTML = navLinks.classList.contains('active') ? '×' : '☰';
+                });
+            }
+
+            // NOTE: The search, filtering, sorting, and pagination functionality
+            // in this template are for display purposes only. A real implementation
+            // would require a backend server and database to process this logic.
+        });
+    </script>
+</body>
+</html>

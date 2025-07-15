@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Publication | AMS Archive | MUST</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa; 
+            --bg-accent: #111827; 
+            --bg-dark: #0c1221; 
+            
+            --text-primary: #111827; 
+            --text-secondary: #4b5563; 
+            --text-muted: #6b7280; 
+            --text-light: #f9fafb;
+            
+            --color-primary: #002D62; /* Deep Academic Blue */
+            --color-primary-light: #E6ECF5; 
+            --color-primary-dark: #001A3A;
+
+            --color-accent: #A92C2C; /* Dark Authoritative Red */
+            --color-accent-dark: #8B2323; 
+            --color-accent-light: #FAEBEB;
+
+            --border-color: #e5e7eb; 
+            --border-focus: var(--color-primary);
+
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            --shadow-sm: 0 2px 4px -1px rgba(0,0,0,0.04), 0 1px 3px 0 rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 10px -2px rgba(0,0,0,0.05), 0 2px 8px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 24px -6px rgba(0,0,0,0.07), 0 5px 15px -3px rgba(0,0,0,0.08);
+
+            --transition-fast: 0.2s ease-in-out;
+            --transition-normal: 0.3s ease-in-out;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Header (from index.html) */
+        header {
+            padding: 18px 0; position: sticky;
+            width: 100%; top: 0; z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+        }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo {
+            font-size: 1.8rem; font-weight: 700; color: var(--color-primary);
+            text-decoration: none; letter-spacing: -0.7px;
+        }
+        .logo span { color: var(--text-primary); font-weight: 500; }
+        .nav-links { display: flex; list-style: none; align-items: center; }
+        .nav-links li { margin-left: 28px; } 
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none; font-weight: 500;
+            font-size: 0.92rem;
+            transition: color var(--transition-fast);
+        }
+        .nav-links a.active { color: var(--color-primary); font-weight: 700; }
+        .nav-links a:hover { color: var(--color-primary); }
+        .cta-button {
+            background: var(--color-accent); color: #fff; padding: 10px 24px; border-radius: 8px;
+            font-weight: 600; font-size: 0.9rem; transition: all var(--transition-fast);
+            display: inline-block; border: none; cursor: pointer; text-decoration: none;
+        }
+        .cta-button:hover { transform: translateY(-2px); background: var(--color-accent-dark); }
+        .mobile-menu { display: none; font-size: 1.8rem; cursor: pointer; color: var(--text-primary); }
+        
+        /* Breadcrumbs */
+        .breadcrumbs {
+            padding: 20px 0;
+            font-size: 0.9rem;
+        }
+        .breadcrumbs a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .breadcrumbs span {
+            color: var(--text-muted);
+            margin: 0 8px;
+        }
+
+        /* Publication Layout */
+        .publication-page-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 40px;
+            padding: 20px 0 80px;
+        }
+
+        /* Main Content Area */
+        .publication-main-content {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+        }
+        .publication-header .publication-type {
+            display: inline-block;
+            background-color: var(--color-accent-light);
+            color: var(--color-accent-dark);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .publication-header h1 {
+            font-size: 2.2rem;
+            line-height: 1.3;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+        .publication-authors {
+            margin-bottom: 25px;
+        }
+        .publication-authors a {
+            color: var(--color-primary);
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .publication-authors a:hover {
+            text-decoration: underline;
+        }
+
+        .publication-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        .publication-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        .publication-section p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 1em;
+        }
+        .publication-section ol, .publication-section ul {
+            padding-left: 25px;
+            color: var(--text-secondary);
+        }
+        .publication-section li {
+            margin-bottom: 0.8em;
+        }
+        
+        /* Figures/Tables Tabs */
+        .figures-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .figures-tabs .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 3px solid transparent;
+            transition: all var(--transition-fast);
+        }
+        .figures-tabs .tab-button.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+        .figure-content { display: none; }
+        .figure-content.active { display: block; }
+        .figure-item { text-align: center; }
+        .figure-item img {
+            max-width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .figure-item figcaption {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Sidebar */
+        .publication-sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+        .sidebar-card {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .sidebar-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        .sidebar-card ul {
+            list-style: none;
+        }
+        .sidebar-card li {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .sidebar-card strong {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .sidebar-card .action-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+            margin-bottom: 10px;
+        }
+        .primary-action {
+            background-color: var(--color-primary);
+            color: #fff;
+        }
+        .primary-action:hover { background-color: var(--color-primary-dark); }
+        .accent-action {
+            background-color: var(--color-accent);
+            color: #fff;
+        }
+        .accent-action:hover { background-color: var(--color-accent-dark); }
+        .sidebar-card .action-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Cite Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 { font-size: 1.5rem; }
+        .modal-close-button {
+            background: transparent;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+            color: var(--text-muted);
+        }
+        .citation-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .modal-container select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .publication-page-layout { grid-template-columns: 1fr; }
+            .publication-sidebar { position: static; }
+            .mobile-menu { display: block; }
+            .nav-links { display: none; }
+            .nav-links.active { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background-color: var(--bg-primary); padding: 20px 0; box-shadow: var(--shadow-lg); }
+            .nav-links.active li { margin: 12px 0; }
+        }
+        @media (max-width: 768px) {
+            .publication-header h1 { font-size: 1.8rem; }
+            .publication-main-content { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">AMS<span>Archive</span></a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="publications.html" class="active">Publications</a></li>
+                    <li><a href="index.html#policies">For Authors</a></li>
+                    <li><a href="index.html#submit" class="cta-button">Submit Paper</a></li>
+                </ul>
+                <div class="mobile-menu">☰</div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs">
+            <a href="index.html">Home</a><span>/</span><a href="publications.html">Publications</a><span>/</span>Prevalence of Antiretroviral...
+        </div>
+
+        <div class="publication-page-layout">
+            <!-- Main Content -->
+            <div class="publication-main-content">
+                <header class="publication-header">
+                    <div class="publication-type">Original Article</div>
+                    <h1>Prevalence of Antiretroviral Drug Resistance in HIV-1 Patients in Blantyre</h1>
+                    <div class="publication-authors">
+                        By <a href="#">J. Phiri</a>, <a href="#">L. Moyo</a>, <a href="#">C. Banda</a>
+                    </div>
+                </header>
+
+                <section class="publication-section" id="abstract">
+                    <h2>Abstract</h2>
+                    <p><strong>Background:</strong> The scale-up of antiretroviral therapy (ART) in Malawi has been a major public health success. However, the emergence of HIV drug resistance (HIVDR) threatens its long-term effectiveness. This study aimed to determine the prevalence of HIVDR mutations in patients receiving long-term ART in Blantyre, Malawi.</p>
+                    <p><strong>Methods:</strong> A cross-sectional study was conducted among adult patients on first-line ART for at least 12 months. Plasma samples were collected for viral load testing and genotyping of the pol gene for those with virologic failure (viral load >1000 copies/mL). Resistance mutations were identified using the Stanford HIV Drug Resistance Database.</p>
+                    <p><strong>Results:</strong> Of the 450 participants, 52 (11.6%) had virologic failure. Genotyping was successful in 48 samples. Any form of HIVDR was detected in 40/48 (83.3%) of these samples. The most common mutations were M184V (75%) and K103N (60%), conferring resistance to lamivudine/emtricitabine and non-nucleoside reverse-transcriptase inhibitors (NNRTIs), respectively.</p>
+                    <p><strong>Conclusion:</strong> There is a high prevalence of HIVDR among patients with virologic failure on first-line ART in Blantyre. These findings underscore the need for enhanced viral load monitoring and access to second-line regimens to maintain the success of the national ART program.</p>
+                </section>
+
+                <section class="publication-section" id="full-text">
+                    <h2>Full Text</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat.</p>
+                    <p>Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh.</p>
+                    <!-- The rest of the full text would go here -->
+                </section>
+
+                <section class="publication-section" id="figures-tables">
+                    <h2>Figures & Tables</h2>
+                    <div class="figures-tabs">
+                        <button class="tab-button active" data-tab="figure1">Figure 1</button>
+                        <button class="tab-button" data-tab="table1">Table 1</button>
+                    </div>
+                    <div class="figure-content active" id="figure1">
+                        <figure class="figure-item">
+                            <!-- TODO: Replace with actual figure image -->
+                            <img src="https://via.placeholder.com/600x400.png?text=Figure+1:+Study+Flowchart" alt="Flowchart of study participants">
+                            <figcaption>Figure 1. Flowchart showing participant selection and outcomes.</figcaption>
+                        </figure>
+                    </div>
+                    <div class="figure-content" id="table1">
+                        <figure class="figure-item">
+                            <!-- TODO: Replace with actual table image or an HTML table -->
+                            <img src="https://via.placeholder.com/600x300.png?text=Table+1:+Prevalence+of+Mutations" alt="Table of drug resistance mutations">
+                            <figcaption>Table 1. Prevalence of specific drug resistance mutations among patients with virologic failure.</figcaption>
+                        </figure>
+                    </div>
+                </section>
+
+                <section class="publication-section" id="references">
+                    <h2>References</h2>
+                    <ol>
+                        <li>World Health Organization. (2021). Consolidated guidelines on HIV prevention, testing, treatment, service delivery and monitoring.</li>
+                        <li>Ministry of Health, Malawi. (2020). Integrated Guidelines for Clinical Management of HIV in Malawi.</li>
+                        <li>Gupta, R. K., Gregson, J., Parkin, N., Haile-Selassie, H., Tanuri, A., Forero, L. A., ... & Pillay, D. (2018). HIV-1 drug resistance before initiation or re-initiation of first-line antiretroviral therapy in low-income and middle-income countries: a systematic review and meta-regression analysis. The Lancet Infectious Diseases, 18(3), 346-355.</li>
+                    </ol>
+                </section>
+
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="publication-sidebar">
+                <div class="sidebar-card">
+                    <a href="#" class="action-button primary-action">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+                        Download PDF
+                    </a>
+                    <button class="action-button accent-action" id="cite-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.084.67.676 1.14 1.473 1.14 1.06 0 1.797-.816 1.797-2.131zm-2.87-1.42c0-.956-.59-1.58-1.356-1.58-.852 0-1.453.635-1.453 1.58 0 .943.628 1.563 1.453 1.563.757 0 1.356-.613 1.356-1.563z"/></svg>
+                        Cite
+                    </button>
+                </div>
+                <div class="sidebar-card">
+                    <h3>Article Details</h3>
+                    <ul>
+                        <li><strong>Journal:</strong> Malawi Journal of Medicine, Vol. 8, Iss. 2</li>
+                        <li><strong>Published:</strong> 15 May 2024</li>
+                        <li><strong>DOI:</strong> <a href="#">10.1234/mjm.2024.123</a></li>
+                        <li><strong>Keywords:</strong> HIV, ART, Drug Resistance, Malawi</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Citation Modal -->
+    <div class="modal-overlay" id="cite-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Generate Citation</h2>
+                <button class="modal-close-button" id="modal-close">&times;</button>
+            </div>
+            <select id="citation-format">
+                <option value="apa">APA 7th Edition</option>
+                <option value="mla">MLA 9th Edition</option>
+                <option value="chicago">Chicago 17th Edition</option>
+                <option value="vancouver">Vancouver</option>
+            </select>
+            <div class="citation-box" id="citation-text">
+                Phiri, J., Moyo, L., & Banda, C. (2024). Prevalence of Antiretroviral Drug Resistance in HIV-1 Patients in Blantyre. <i>Malawi Journal of Medicine, 8</i>(2), 45-52. https://doi.org/10.1234/mjm.2024.123
+            </div>
+            <button class="action-button primary-action" style="width: 100%;">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <!-- Footer content from index.html -->
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu
+            const mobileMenuButton = document.querySelector('.mobile-menu');
+            const navLinks = document.querySelector('.nav-links');
+            if (mobileMenuButton && navLinks) {
+                mobileMenuButton.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    mobileMenuButton.innerHTML = navLinks.classList.contains('active') ? '×' : '☰';
+                });
+            }
+
+            // Figures/Tables Tabs
+            const tabButtons = document.querySelectorAll('.figures-tabs .tab-button');
+            const tabContents = document.querySelectorAll('.figure-content');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    const activeTabId = button.getAttribute('data-tab');
+                    document.getElementById(activeTabId).classList.add('active');
+                });
+            });
+
+            // Citation Modal
+            const citeButton = document.getElementById('cite-button');
+            const modalOverlay = document.getElementById('cite-modal');
+            const modalCloseButton = document.getElementById('modal-close');
+
+            if (citeButton && modalOverlay && modalCloseButton) {
+                citeButton.addEventListener('click', () => {
+                    modalOverlay.classList.add('active');
+                });
+                modalCloseButton.addEventListener('click', () => {
+                    modalOverlay.classList.remove('active');
+                });
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        modalOverlay.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
